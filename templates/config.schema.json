@@ -59,6 +59,11 @@
       "properties": {
         "codeReview": { "type": "boolean", "default": true, "description": "Run the code-reviewer agent on each PR." },
         "e2eTest": { "type": "boolean", "default": true, "description": "Run the e2e-tester agent on each PR." },
+        "reviewerModel": {
+          "type": ["string", "null"],
+          "default": null,
+          "description": "Model override for the review agents (code-reviewer, e2e-tester), e.g. 'opus' or 'sonnet'. Using a different model than the developer agent decorrelates blind spots. null: inherit the session model."
+        },
         "maxReviewIterations": {
           "type": "integer",
           "minimum": 1,

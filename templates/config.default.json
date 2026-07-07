@@ -15,6 +15,7 @@
   "review": {
     "codeReview": true,
     "e2eTest": true,
+    "reviewerModel": null,
     "maxReviewIterations": 3
   },
   "testing": {

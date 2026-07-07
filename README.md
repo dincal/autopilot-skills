@@ -71,6 +71,7 @@ Created by `/autopilot-init`; JSON Schema in [`templates/config.schema.json`](te
 | `approvals.runMerge` | `ask` | Gate for the final run PR into your base branch. Unattended runs never merge it regardless — the PR waits for you |
 | `approvals.newTodos` | `auto` | Gate for agent-generated todo items |
 | `review.maxReviewIterations` | `3` | Fix-and-re-review cycles before escalating to you |
+| `review.reviewerModel` | `null` | Run review agents on a different model than the developer agent to decorrelate blind spots (e.g. `opus`); `null` inherits the session model |
 | `testing.requireTests` | `true` | Every feature must ship with tests (acceptance criteria + edge cases + error paths) |
 | `testing.coverage.target` | `80` | Minimum coverage (%) for changed code — feature agents keep adding tests until met when coverage is measurable (`testing.coverage.command`) |
 | `git.baseBranch` / `.branchPrefix` / `.mergeMethod` | `main` / `autopilot/` / `squash` | Git/PR policy |

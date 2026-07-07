@@ -9,8 +9,9 @@ For each PR, run review rounds until both reviewers APPROVE or the cap is hit:
 1. Spawn in parallel (background, per PR):
    - `autopilot:code-reviewer` — unless `review.codeReview` is false. Input: REVIEW INPUT block (schemas.md) with PR number, repo path, Goal Prompt, acceptance criteria, `scope: critical-only` when `fastMode`.
    - `autopilot:e2e-tester` — unless `review.e2eTest` is false or `fastMode` is true. Input: worktree path, e2e run settings from config, acceptance criteria.
+   - When `review.reviewerModel` is set, spawn BOTH reviewers with that model override (Agent tool `model` option). Running reviewers on a different model than the developer agent decorrelates blind spots; it does not equal an external human review.
 2. Parse each agent's trailing `VERDICT` block (contract in schemas.md). A missing/malformed VERDICT block → re-spawn that reviewer once; if still malformed, treat as APPROVE with a logged warning (a broken reviewer must not block shipping).
-3. Post each review to the PR: `gh pr review <n> --approve` or `--request-changes`, `--body` containing the reviewer's findings (in `config.language`). Also append one line per round to the branch doc's Review Log.
+3. Post each reviewer's findings to the PR as a COMMENT: `gh pr comment <n> --body ...` (in `config.language`), starting with a bold verdict line — e.g. `**[code-review r1] VERDICT: REQUEST_CHANGES**` — followed by the BLOCKING/NOTES content. NEVER use `gh pr review --approve/--request-changes`: the PR author and the gh session are the same account, and GitHub rejects reviewing your own PR. Approval state lives with the orchestrator — `features[].reviewRounds` + feature `status` in state.json and the branch doc's Review Log are the source of truth, not GitHub review status. Also append one line per round to the Review Log.
 
 ## Both approve → done
 
