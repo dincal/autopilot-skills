@@ -6,7 +6,7 @@ This project is managed with the **autopilot** Claude Code plugin.
 ### Commands
 
 - `/autopilot-goal [guidance]` — interview the user and (re)write `.autopilot/goal.md`. The ONLY allowed way to change goals.
-- `/autopilot-init [github-repo]` — initialize or repair the `.autopilot/` directory and this CLAUDE.md section; with a repo argument, connect or create the GitHub remote.
+- `/autopilot-init [github-repo] [overview]` — initialize or repair the `.autopilot/` directory and this CLAUDE.md section; with a repo argument, connect or create the GitHub remote; remaining text seeds the project overview.
 - `/autopilot-todo [ideas]` — interview the user and add user-sourced items to `.autopilot/todo.md`.
 - `/autopilot-config [change]` — show and update `.autopilot/config.json` through an interview.
 - `/autopilot-project-review` — cold market-reaction review of the project; updates goal/todo via interview.

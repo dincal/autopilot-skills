@@ -1,7 +1,7 @@
 ---
 name: autopilot-init
-description: Initialize the .autopilot directory (config, goal, design, todo, changelog, branch docs) and the CLAUDE.md autopilot section for this project, optionally wiring up a GitHub repository.
-argument-hint: "[github repo: owner/repo or URL]"
+description: Initialize the .autopilot directory (config, goal, design, todo, changelog, branch docs) and the CLAUDE.md autopilot section for this project, optionally wiring up a GitHub repository and taking a project overview.
+argument-hint: "[github repo: owner/repo or URL] [project overview]"
 disable-model-invocation: true
 ---
 
@@ -9,11 +9,11 @@ disable-model-invocation: true
 
 Initialize everything the autopilot plugin needs in this project. Be idempotent: re-running must never destroy user content.
 
-Optional GitHub repository argument: $ARGUMENTS
+Optional arguments (GitHub repository and/or project overview): $ARGUMENTS
 
 ## Step 1 — Git & GitHub preconditions
 
-`$ARGUMENTS` may contain a GitHub repository reference — `owner/repo`, `https://github.com/owner/repo`, or `git@github.com:owner/repo.git`. Normalize it to `owner/repo`.
+Parse `$ARGUMENTS`: a leading token shaped like a GitHub repository reference — `owner/repo`, `https://github.com/owner/repo`, or `git@github.com:owner/repo.git` — is the repo (normalize it to `owner/repo`); everything else is the user's rough PROJECT OVERVIEW text (used in Step 2).
 
 **With a repo argument** — make that repository this project's `origin` before anything else. This path requires an authenticated gh CLI: if `gh auth status` fails, explain and STOP. Check existence with `gh repo view <owner/repo>`:
 
@@ -41,6 +41,14 @@ Gather, in parallel where possible:
 - GitHub health (skip if already established in Step 1): `git remote get-url origin` (is it GitHub?) and `gh auth status`. If either fails, WARN the user now: the autopilot dev skill requires a GitHub remote and an authenticated `gh` CLI, and will refuse to run without them. Init still proceeds.
 - Existing `CLAUDE.md`, README, docs.
 
+**Project overview** — establish a 2–4 sentence statement of what this project is, who it is for, and what it does. Sources, in priority order:
+
+1. Overview text from `$ARGUMENTS` — the user's own words always win; refine wording but never change the meaning.
+2. Derived from the survey (README, CLAUDE.md, code) when no argument was given.
+3. If neither yields anything meaningful (e.g. a brand-new empty repo), ASK the user for a short overview via AskUserQuestion before proceeding — do not invent one.
+
+If the overview was derived (source 2) and the evidence is thin or ambiguous, confirm it with the user in one question. The established overview feeds the goal interview seed (Step 4), the design.md seeding (Step 5), and the CLAUDE.md project overview (Step 6).
+
 ## Step 3 — config.json
 
 1. Start from `${CLAUDE_PLUGIN_ROOT}/templates/config.default.json`.
@@ -55,7 +63,7 @@ Gather, in parallel where possible:
 ## Step 4 — goal.md
 
 - If `.autopilot/goal.md` exists: leave it untouched.
-- If missing: run the goal interview inline — follow the exact protocol of the `autopilot-goal` skill (read `${CLAUDE_PLUGIN_ROOT}/skills/autopilot-goal/SKILL.md` and execute its Steps 2–4, including the consent gate and the `.goal-consent` token). If the user declines to write goal.md, continue initializing the rest but note clearly that the autopilot dev skill cannot run without goal.md.
+- If missing: run the goal interview inline — follow the exact protocol of the `autopilot-goal` skill (read `${CLAUDE_PLUGIN_ROOT}/skills/autopilot-goal/SKILL.md` and execute its Steps 2–4, including the consent gate and the `.goal-consent` token), seeding the interview with the project overview from Step 2. If the user declines to write goal.md, continue initializing the rest but note clearly that the autopilot dev skill cannot run without goal.md.
 
 ## Step 5 — Scaffold the rest
 
@@ -68,7 +76,7 @@ Create only what is missing, from `${CLAUDE_PLUGIN_ROOT}/templates/`:
 
 ## Step 6 — CLAUDE.md
 
-1. If `CLAUDE.md` does not exist, create it following best practices: short project overview, how to run/test/build (commands verified in Step 2), key directories, conventions. Keep it concise and imperative — commands over prose.
+1. If `CLAUDE.md` does not exist, create it following best practices: the project overview established in Step 2, how to run/test/build (commands verified in Step 2), key directories, conventions. Keep it concise and imperative — commands over prose. If CLAUDE.md exists but lacks an overview, add the established one at the top (outside the autopilot markers).
 2. Insert the managed autopilot section from `${CLAUDE_PLUGIN_ROOT}/templates/claude-md-section.md`:
    - Replace `{{PROJECT_SNAPSHOT}}` with a compact file-structure overview (top-level directories with one-line purposes) plus the run/test commands.
    - If `<!-- AUTOPILOT:BEGIN -->` ... `<!-- AUTOPILOT:END -->` markers already exist, replace ONLY the content between them. Never touch anything outside the markers.
