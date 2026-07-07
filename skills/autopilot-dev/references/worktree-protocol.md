@@ -13,8 +13,10 @@ For each feature (from a clean, up-to-date base):
 ```bash
 git fetch origin
 mkdir -p <worktreeRoot>
-git worktree add <worktreeRoot>/<slug> -b <branch> origin/<baseBranch>
+git worktree add <worktreeRoot>/<slug> -b <branch> origin/<run branch>
 ```
+
+Feature branches always fork from the RUN branch (created at run setup — see loop-protocol), never from `git.baseBranch` directly.
 
 Then prepare the worktree so the agent can work immediately: install dependencies if the project needs it (`npm ci`, `uv sync`, etc. — detect from lockfiles), and verify the test command runs there.
 

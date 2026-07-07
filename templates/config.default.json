@@ -9,7 +9,8 @@
     "goalPrompt": "ask",
     "plan": "ask",
     "newTodos": "auto",
-    "merge": "ask"
+    "merge": "ask",
+    "runMerge": "ask"
   },
   "review": {
     "codeReview": true,

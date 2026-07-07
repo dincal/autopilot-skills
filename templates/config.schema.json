@@ -49,7 +49,8 @@
         "goalPrompt": { "$ref": "#/definitions/gate", "description": "Approval of each feature's Goal Prompt." },
         "plan": { "$ref": "#/definitions/gate", "description": "Approval of each feature's implementation Plan." },
         "newTodos": { "$ref": "#/definitions/gate", "description": "Approval of agent-generated todo items." },
-        "merge": { "$ref": "#/definitions/gate", "description": "Approval before merging each approved PR." }
+        "merge": { "$ref": "#/definitions/gate", "description": "Approval before merging each approved feature PR into the run branch." },
+        "runMerge": { "$ref": "#/definitions/gate", "description": "Approval before merging the run branch into git.baseBranch at run end. Unattended runs NEVER merge into the base branch regardless of this setting — the run PR is left open for the user." }
       }
     },
     "review": {

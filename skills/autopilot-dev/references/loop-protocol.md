@@ -2,6 +2,14 @@
 
 State discipline: before each phase, set `state.json` → `run.phase` and per-feature `status`, and append a line to `.autopilot/logs/run-<id>.md`. Phase values: `selecting → planning → developing → reviewing → merging → docs → idle`.
 
+## Run setup (once per run, before iteration 1)
+
+Loop mode only — single-feature mode works directly against `git.baseBranch` with no run branch:
+
+1. Run id `run-<YYYYMMDD>-<HHmm>` → run branch `<git.branchPrefix>run-<id>` (e.g. `autopilot/run-20260707-1530`).
+2. `git fetch origin`; create the run branch from `origin/<git.baseBranch>`; `git push -u origin <run branch>`; check it out in the main checkout. Record the branch the user was on in `state.json.run.previousBranch` for restoration at run end.
+3. Record `run.branch` in state.json. Every feature branch of this run forks from and merges into the RUN branch. `git.baseBranch` is touched by exactly one thing: the final run PR (see "Run end") — never by direct merges or commits.
+
 ## Phase A — Select (`phase: selecting`)
 
 1. Read `goal.md` and `todo.md` in full.
@@ -41,26 +49,37 @@ Per feature as it finishes development:
 
 1. Update any project docs the feature affects (README usage, API docs) inside the worktree; commit.
 2. Push: `git -C <worktree> push -u origin <branch>`.
-3. Create the PR: `gh pr create --base <baseBranch> --head <branch>` — title in English (conventional style), body in `config.language` following the **PR body schema in `schemas.md`**: it MUST lead with the highlighted "decisions made without user approval" section (compiled from auto-passed gates, agent design decisions, WORK SUMMARY autonomous-decisions/deviations, arbitration overrides), followed by the work summary, then acceptance-criteria checklist and test evidence. Record the PR number in state.json and the branch doc.
+3. Create the PR: `gh pr create --base <run branch> --head <branch>` (single-feature mode: `--base <git.baseBranch>`) — title in English (conventional style), body in `config.language` following the **PR body schema in `schemas.md`**: it MUST lead with the highlighted "decisions made without user approval" section (compiled from auto-passed gates, agent design decisions, WORK SUMMARY autonomous-decisions/deviations, arbitration overrides), followed by the work summary, then acceptance-criteria checklist and test evidence. Record the PR number in state.json and the branch doc.
 4. Run the review cycle per `review-protocol.md` until both reviewers APPROVE, the iteration cap escalates to the user, or the feature is abandoned.
 
 ## Phase E — Merge & Close (`phase: merging` → `docs`)
 
-1. Merge gate: `approvals.merge = ask` → one AskUserQuestion listing all approved PRs with links (options per PR: Merge / Hold). `auto` → merge without asking.
-2. Merge SEQUENTIALLY: `gh pr merge <n> --<git.mergeMethod>` (add `--delete-branch` if `git.deleteBranchAfterMerge`). After each merge, for every remaining unmerged feature branch: fetch, rebase onto the updated base in its worktree, rerun the test suite, force-push (`--force-with-lease`). Rebase conflicts → spawn a feature-dev fix run in that worktree; if tests still fail, escalate to the user.
+1. Merge gate: `approvals.merge = ask` → one AskUserQuestion listing all approved feature PRs with links (options per PR: Merge / Hold). `auto` → merge without asking. Feature PRs merge into the RUN branch, never into `git.baseBranch`.
+2. Merge SEQUENTIALLY: `gh pr merge <n> --<git.mergeMethod>` (add `--delete-branch` if `git.deleteBranchAfterMerge`). After each merge, for every remaining unmerged feature branch: fetch, rebase onto the updated run branch in its worktree, rerun the test suite, force-push (`--force-with-lease`). Rebase conflicts → spawn a feature-dev fix run in that worktree; if tests still fail, escalate to the user.
 3. Per merged feature (`phase: docs`):
    - Remove its todo items from todo.md.
    - Append CHANGELOG `[Unreleased]` entries: `- <description> (<AP-ids>, PR #<n>)`.
    - Branch doc: `status: merged` (next `/autopilot-sync` archives it).
    - If the project file structure changed, refresh the CLAUDE.md managed section snapshot (between the AUTOPILOT markers only).
    - Remove the worktree (`git worktree remove <path>`, then `git worktree prune`).
-4. Commit the `.autopilot/` doc updates on the base branch with message `chore(autopilot): close iteration <k>`.
+4. Commit the `.autopilot/` doc updates on the RUN branch (pull it first — the feature merges happened on GitHub) with message `chore(autopilot): close iteration <k>`, and push. Single-feature mode: commit them on the feature branch before the PR instead.
+5. Run PR: after the first feature merge of the run, open the run PR — `gh pr create --base <git.baseBranch> --head <run branch>` — with the body per the "Run PR body" schema in `schemas.md`. On later iterations keep its body current with `gh pr edit`.
 
 ## Loop continuation
 
 1. Increment `run.iteration`. Report the iteration compactly: merged PRs, failed/abandoned features, todo count remaining.
 2. Stop when: user asked; `loop.maxIterations` > 0 reached; `stopOnFailure` and something failed; or goal met (all Success Criteria verified in Phase A of the NEXT iteration — goal completion is always judged against the running app, not assumptions). Otherwise continue with Phase A.
 3. `single-feature` mode: always stop after Phase E, with `run.phase: "idle"`.
+
+## Run end (any stop reason: user stop, limits, failure, goal met)
+
+1. Finalize the run PR body: iterations run, merged feature PRs (links), parked/failed features, todo & changelog updates, cumulative autonomous decisions, aggregate test/coverage evidence.
+2. Apply the `approvals.runMerge` gate for merging the run branch into `git.baseBranch`:
+   - `ask` → AskUserQuestion: Merge now / Leave the run PR open for later.
+   - `auto` → `gh pr merge <run pr> --<git.mergeMethod>`.
+   - **Unattended: NEVER merge into the base branch** regardless of the setting — leave the run PR open with a closing comment summarizing the run; the user merges when ready.
+3. If the run merged zero features: open no run PR and delete the run branch (local and origin).
+4. Restore the main checkout to `state.json.run.previousBranch` and restore any preflight stash. Set `run.phase: "idle"`.
 
 ## Unattended defaults (`unattended: true`)
 
@@ -73,7 +92,8 @@ No AskUserQuestion anywhere. Each decision point that normally asks resolves as 
 - **Phase B, design check** → decide the design yourself (your recommended option), record it in design.md as `Decided by: agent (unattended run)`.
 - **Phase B, `approvals.goalPrompt` / `approvals.plan`** → auto.
 - **Phase D, review iteration cap exceeded** → PARK the feature: see review-protocol "Unattended". Never merge a PR that reviewers did not approve.
-- **Phase E, `approvals.merge`** → auto-merge approved PRs.
+- **Phase E, `approvals.merge`** → auto-merge approved feature PRs into the RUN branch only.
+- **Run end, `approvals.runMerge`** → never merge into `git.baseBranch`; the run PR is left open with a summary comment. Single-feature mode likewise: its PR targets the base branch, so it is left open, never auto-merged.
 - **Phase E, risky rebase conflict / tests failing after rebase and one fix attempt** → park the feature the same way; continue with the rest.
 - **Goal ambiguity** → never write goal.md; interpret conservatively (prefer the literal Success Criteria) and note the ambiguity in the report.
 

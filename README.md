@@ -52,8 +52,10 @@ Each iteration:
 2. **Plan** — per feature: frame design decisions for you when needed, write a Goal Prompt and an implementation Plan (each gated by `approvals.*`)
 3. **Develop** — per feature: branch + worktree + background feature-dev agent; tests are mandatory
 4. **Ship & review** — push, `gh pr create`; code-reviewer and e2e-tester agents review in parallel; fix cycles run until both approve (capped by `review.maxReviewIterations`, then escalated to you)
-5. **Merge & close** — merge per `approvals.merge` (sequential, with rebases in between), update todo/changelog/branch docs/CLAUDE.md, clean up worktrees
-6. Repeat — until you stop it, `loop.maxIterations` hits, or every Success Criterion in `goal.md` is verifiably met
+5. **Merge & close** — feature PRs merge into the **run branch** per `approvals.merge` (sequential, with rebases in between); docs update on the run branch; worktrees cleaned up
+6. Repeat — until you stop it, `loop.maxIterations` hits, or every Success Criterion in `goal.md` is verifiably met. At run end, one **run PR** (run branch → base) carries everything into your base branch, gated by `approvals.runMerge`
+
+Each run gets its own run branch (`autopilot/run-<id>`) forked from your base branch — features stack on it, and your base branch is only touched by the final run PR.
 
 ## Configuration (`.autopilot/config.json`)
 
@@ -65,7 +67,8 @@ Created by `/autopilot-init`; JSON Schema in [`templates/config.schema.json`](te
 | `fastMode` | `false` | Minimize review: skip E2E, one review round, critical defects only |
 | `unattended` | `false` | The dev loop never asks you anything: gates behave as `auto`, decision points use documented safe defaults, stuck features get parked (PR left open with a comment) instead of force-merged. goal.md still requires your consent |
 | `parallelFeatures` | `2` | Features developed concurrently per iteration (1–4) |
-| `approvals.goalPrompt` / `.plan` / `.merge` | `ask` | `ask` pauses for your approval; `auto` proceeds |
+| `approvals.goalPrompt` / `.plan` / `.merge` | `ask` | `ask` pauses for your approval; `auto` proceeds (`.merge` covers feature PRs → run branch) |
+| `approvals.runMerge` | `ask` | Gate for the final run PR into your base branch. Unattended runs never merge it regardless — the PR waits for you |
 | `approvals.newTodos` | `auto` | Gate for agent-generated todo items |
 | `review.maxReviewIterations` | `3` | Fix-and-re-review cycles before escalating to you |
 | `testing.requireTests` | `true` | Every feature must ship with tests (acceptance criteria + edge cases + error paths) |
@@ -79,6 +82,7 @@ Created by `/autopilot-init`; JSON Schema in [`templates/config.schema.json`](te
 - **Your CLAUDE.md text is safe.** Autopilot only regenerates the section between `<!-- AUTOPILOT:BEGIN -->` and `<!-- AUTOPILOT:END -->` markers.
 - **Every PR confesses first.** The PR body always leads with a highlighted "decisions made without user approval" section — design choices, auto-passed gates, plan deviations, review-arbitration overrides — followed by the work summary, so you can audit what was decided for you before merging.
 - **`todo.md` reflects only unbuilt work**, and your items always outrank the agent's.
+- **Your base branch is insulated.** Features merge into a per-run branch; only the final run PR touches base, and unattended runs never merge it — it stays open until you do.
 - **Nothing merges with failing tests**, and nothing ships without review unless you configured it that way.
 
 ## Repository layout

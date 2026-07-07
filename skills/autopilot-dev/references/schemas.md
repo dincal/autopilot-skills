@@ -9,6 +9,9 @@ Rewritten atomically (full file) at every phase transition.
   "schemaVersion": 1,
   "run": {
     "id": "run-<YYYYMMDD>-<HHmm>",
+    "branch": "autopilot/run-20260707-1530",
+    "pr": null,
+    "previousBranch": "main",
     "mode": "loop",
     "fastMode": false,
     "iteration": 3,
@@ -138,6 +141,10 @@ Compile the decisions section from ALL of:
 After these two sections, append: acceptance-criteria checklist, test evidence (including measured coverage when available), how to verify, and references (feature id, AP-### todos, branch doc).
 
 If later review rounds add autonomous decisions (e.g. arbitration downgrades), update the PR body's top section via `gh pr edit --body` so it stays complete at merge time.
+
+## Run PR body (run branch → `git.baseBranch`)
+
+Same leading structure — the ⚠️ decisions section FIRST, aggregating the autonomous decisions of every feature in the run — then the run summary: iterations completed, merged feature PRs (links + one-liners), parked/failed features, todo & changelog updates, aggregate test/coverage evidence. Kept current with `gh pr edit` each iteration and finalized at run end.
 
 ## REVIEW INPUT block (orchestrator → code-reviewer / e2e-tester)
 
