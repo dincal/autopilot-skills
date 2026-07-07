@@ -6,7 +6,7 @@ This project is managed with the **autopilot** Claude Code plugin.
 ### Commands
 
 - `/autopilot-goal [guidance]` — interview the user and (re)write `.autopilot/goal.md`. The ONLY allowed way to change goals.
-- `/autopilot-init` — initialize or repair the `.autopilot/` directory and this CLAUDE.md section.
+- `/autopilot-init [github-repo]` — initialize or repair the `.autopilot/` directory and this CLAUDE.md section; with a repo argument, connect or create the GitHub remote.
 - `/autopilot-sync` — reconcile all `.autopilot/` files and this section with the current state of the repository.
 - Saying **"develop with autopilot" / "오토파일럿으로 개발해"** starts the autonomous development loop (a skill, not a slash command).
 

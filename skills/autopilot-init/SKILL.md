@@ -1,6 +1,7 @@
 ---
 name: autopilot-init
-description: Initialize the .autopilot directory (config, goal, design, todo, changelog, branch docs) and the CLAUDE.md autopilot section for this project.
+description: Initialize the .autopilot directory (config, goal, design, todo, changelog, branch docs) and the CLAUDE.md autopilot section for this project, optionally wiring up a GitHub repository.
+argument-hint: "[github repo: owner/repo or URL]"
 disable-model-invocation: true
 ---
 
@@ -8,10 +9,25 @@ disable-model-invocation: true
 
 Initialize everything the autopilot plugin needs in this project. Be idempotent: re-running must never destroy user content.
 
-## Step 1 — Preconditions
+Optional GitHub repository argument: $ARGUMENTS
 
-1. Run `git rev-parse --is-inside-work-tree`. If this is not a git repository, explain that autopilot requires git (offer to `git init` only if the user asks) and STOP.
-2. If `.autopilot/` already exists, ask via AskUserQuestion:
+## Step 1 — Git & GitHub preconditions
+
+`$ARGUMENTS` may contain a GitHub repository reference — `owner/repo`, `https://github.com/owner/repo`, or `git@github.com:owner/repo.git`. Normalize it to `owner/repo`.
+
+**With a repo argument** — make that repository this project's `origin` before anything else. This path requires an authenticated gh CLI: if `gh auth status` fails, explain and STOP. Check existence with `gh repo view <owner/repo>`:
+
+- **The repo EXISTS on GitHub**:
+  - cwd is already a git repo → point `origin` at it: add the remote if missing; if `origin` exists and differs from the given address, ask the user before switching. Then `git fetch origin`.
+  - cwd is NOT a git repo and is empty → `git clone https://github.com/<owner/repo>.git .` and continue initializing the clone.
+  - cwd is NOT a git repo but has files → `git init -b <remote default branch>`, add `origin`, `git fetch origin`. If the remote already has commits, ask the user how to reconcile (integrate the remote history / abort for manual resolution) — never overwrite either side silently.
+- **The repo does NOT exist**:
+  - Ensure a local repo first (`git init -b main` if needed).
+  - Ask the user for visibility (public / private) via AskUserQuestion, then create it: `gh repo create <owner/repo> --<visibility> --source . --remote origin`, adding `--push` when local commits already exist. If there is nothing committed yet, the push happens with the commit suggestion in Step 7.
+
+**Without a repo argument**: run `git rev-parse --is-inside-work-tree`. If this is not a git repository, explain that autopilot requires git (offer to `git init` only if the user asks) and STOP.
+
+**Existing .autopilot/**: if `.autopilot/` already exists, ask via AskUserQuestion:
    - **Repair / re-initialize** — recreate missing files and refresh CLAUDE.md, but NEVER regenerate or overwrite an existing `goal.md`, and preserve existing todo/design/changelog content (only add missing scaffold parts).
    - **Run /autopilot-sync instead** — if the files exist and just look stale, stop here and tell the user to run `/autopilot-sync`.
 
@@ -21,8 +37,8 @@ Gather, in parallel where possible:
 
 - Stack and tooling: package manifests, lockfiles, frameworks.
 - How to run tests (e.g. `npm test`, `pytest`, `go test ./...`) and how to start the app (dev server command, CLI entrypoint). Verify a candidate test command actually runs if cheap to do.
-- Default/base branch: `git remote show origin` or `git symbolic-ref refs/remotes/origin/HEAD`, falling back to the current branch.
-- GitHub health: `git remote get-url origin` (is it GitHub?) and `gh auth status`. If either fails, WARN the user now: the autopilot dev skill requires a GitHub remote and an authenticated `gh` CLI, and will refuse to run without them. Init still proceeds.
+- Default/base branch: `git remote show origin` or `git symbolic-ref refs/remotes/origin/HEAD`, falling back to the current branch. When a repo argument was handled in Step 1, prefer the GitHub default branch.
+- GitHub health (skip if already established in Step 1): `git remote get-url origin` (is it GitHub?) and `gh auth status`. If either fails, WARN the user now: the autopilot dev skill requires a GitHub remote and an authenticated `gh` CLI, and will refuse to run without them. Init still proceeds.
 - Existing `CLAUDE.md`, README, docs.
 
 ## Step 3 — config.json
@@ -66,4 +82,4 @@ Create only what is missing, from `${CLAUDE_PLUGIN_ROOT}/templates/`:
    .autopilot/.goal-consent
    ```
 2. Print a summary: every file created/updated/skipped, warnings (e.g. missing GitHub remote), and next steps — `/autopilot-goal` if goal.md is missing, then "develop with autopilot" to start the loop.
-3. Suggest committing the new files (do not commit unless asked).
+3. Suggest committing the new files (do not commit unless asked). If a GitHub repository was newly created in Step 1 and nothing has been pushed yet, include pushing (`git push -u origin <branch>`) in the suggestion.

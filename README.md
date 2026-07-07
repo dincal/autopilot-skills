@@ -34,7 +34,7 @@ claude --plugin-dir /path/to/autopilot-skills
 
 | Command | What it does |
 |---|---|
-| `/autopilot-init` | Initialize `.autopilot/` (config, goal, design, todo, changelog, branch docs) and the managed CLAUDE.md section |
+| `/autopilot-init [github-repo]` | Initialize `.autopilot/` (config, goal, design, todo, changelog, branch docs) and the managed CLAUDE.md section. With a repo argument (`owner/repo` or URL): wires it up as `origin` — cloning/connecting if it exists on GitHub, creating it via `gh` if it doesn't |
 | `/autopilot-goal [guidance]` | Interview you about the project's ultimate and short-term goals, then write `goal.md` — only with your explicit approval |
 | `/autopilot-sync` | Reconcile every autopilot file with the current repo reality (code, git history, merged PRs) |
 | Say **"develop with autopilot"** / **"오토파일럿으로 개발해"** | Start the autonomous dev loop (a skill, not a slash command) |
