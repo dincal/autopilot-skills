@@ -88,6 +88,16 @@ Per feature as it finishes development:
 3. If the run merged zero features: open no run PR and delete the run branch (local and origin).
 4. Restore the main checkout to `state.json.run.previousBranch` and restore any preflight stash. Set `run.phase: "idle"`.
 
+## Ultracode orchestration (`ultracode: true`)
+
+When enabled and the Workflow tool exists in the session, upgrade these phases (everything else — worktrees, PRs, merges, state — stays exactly as specified above; workflows never push, merge, or write `.autopilot/` files):
+
+- **Phase A gap analysis** → one workflow: parallel finder agents, one per Success Criterion / Short-Term Goal (each runs or inspects the app against its criterion), then a dedup stage that merges overlapping gaps before todo drafting. Replaces the single-pass gap analysis.
+- **Phase B planning (per feature)** → one workflow: 2–3 independent plan drafts from different angles (e.g. minimal-change, clean-architecture, test-first), a judge stage that scores them against the Goal Prompt, and a synthesis of the winner grafting the runners-up's best ideas. The synthesized plan still passes the `approvals.plan` gate as usual.
+- **Phase D code review (per PR)** → one workflow replacing the single code-reviewer agent: dimension finders (correctness, security, tests/coverage, acceptance-criteria) fan out over the PR diff, then EVERY candidate blocking item is adversarially verified by 2–3 independent skeptic agents prompted to refute it — only items surviving majority verification become BLOCKING (whitelist rules still apply; unverified items become NOTES). The e2e-tester agent still runs separately as specified. `review.reviewerModel` applies to workflow review agents too.
+
+Rules: `fastMode` overrides ultracode for Phase D (skip the review workflow, use the standard critical-only reviewer). If a workflow fails or the Workflow tool is unavailable, fall back to the standard protocol for that phase and log it. Log each workflow run (phase, agent count) in the run log; iteration reports mention ultracode usage.
+
 ## Unattended defaults (`unattended: true`)
 
 No AskUserQuestion anywhere. Each decision point that normally asks resolves as follows — always logged to the run log and listed in the end-of-run report:

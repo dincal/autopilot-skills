@@ -22,7 +22,7 @@ User's change request (may be empty): $ARGUMENTS
 
 - If `$ARGUMENTS` names concrete changes (e.g. "merge auto", "parallel 3", "fast mode on"), map them to schema keys and go straight to Step 3 with those.
 - Otherwise ask via AskUserQuestion which areas to change (multiSelect over the groups above), then interview each selected area with concrete options:
-  - present the current value, the allowed values (from the schema), and one line on the practical consequence of each choice — especially for authority-shifting settings: `approvals.merge`/`goalPrompt`/`plan` (`auto` = the agent proceeds without asking), `fastMode` (skips E2E, one review round), `parallelFeatures` (more worktrees and concurrent agents), `git.mergeMethod`.
+  - present the current value, the allowed values (from the schema), and one line on the practical consequence of each choice — especially for authority-shifting or cost-shifting settings: `approvals.merge`/`goalPrompt`/`plan` (`auto` = the agent proceeds without asking), `unattended` (never asks anything), `fastMode` (skips E2E, one review round), `ultracode` (multi-agent workflows — much higher token cost), `parallelFeatures` (more worktrees and concurrent agents), `git.mergeMethod`.
   - batch related questions into one round; keep the whole interview to 1–2 rounds.
 
 ## Step 3 — Validate and confirm

@@ -34,6 +34,11 @@
       "default": false,
       "description": "Unattended mode: the dev loop never asks the user anything — all approval gates behave as auto and every decision point resolves to its documented safe default (logged and reported). goal.md still requires explicit user consent and is never written. Applies to the autopilot dev skill only."
     },
+    "ultracode": {
+      "type": "boolean",
+      "default": false,
+      "description": "Use multi-agent Workflow orchestration (ultracode) inside the dev loop: fan-out gap analysis, multi-plan judging, and adversarially verified code review. Requires the Workflow tool in the session (falls back to the standard protocol when unavailable). Significantly increases token cost."
+    },
     "parallelFeatures": {
       "type": "integer",
       "minimum": 1,

@@ -4,6 +4,7 @@
   "mode": "loop",
   "fastMode": false,
   "unattended": false,
+  "ultracode": false,
   "parallelFeatures": 2,
   "approvals": {
     "goalPrompt": "ask",

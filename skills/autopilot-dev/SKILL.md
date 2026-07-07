@@ -23,6 +23,7 @@ Detailed protocols live next to this file; read each when you reach the relevant
   - "develop <specific feature> with autopilot" / "이 피처만 오토파일럿으로" → `single-feature` mode for that feature
   - "fast" / "빠르게" qualifiers → `fastMode: true` for this run
   - "unattended" / "무인모드" / "묻지 말고 알아서" qualifiers → `unattended: true` for this run
+  - "ultracode" / "울트라코드" qualifiers → `ultracode: true` for this run
 
 ## Preflight (every run)
 
@@ -54,6 +55,10 @@ Rewrite `.autopilot/state.json` at every phase transition (schema in `references
 - Reviews follow `references/review-protocol.md`: approve-biased, blocking only for real defects. You act only on BLOCKING items, never on NOTES.
 - At every phase boundary, check whether the user has asked to stop or pause; if so, finish writing state.json and stop cleanly.
 - When gates are `auto`, do not invent extra per-iteration confirmation questions — that defeats loop mode. Keep the user informed with concise progress updates instead.
+
+## Ultracode orchestration (`ultracode: true`)
+
+The user's explicit autopilot trigger combined with this setting is their standing opt-in to multi-agent Workflow orchestration for this run. When enabled AND the Workflow tool is available in the session, upgrade the phases per the "Ultracode orchestration" section of `references/loop-protocol.md` (fan-out gap analysis, multi-plan judging, adversarially verified review). When the Workflow tool is unavailable, fall back to the standard protocol and note that in the run log. `fastMode` overrides ultracode for the review phase (fast means fast). Expect significantly higher token cost — that is the point of the setting.
 
 ## Unattended mode (`unattended: true`)
 
