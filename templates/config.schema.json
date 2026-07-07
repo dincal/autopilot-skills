@@ -76,6 +76,24 @@
           "default": null,
           "description": "Command to run the test suite. null: auto-detect from the repo each run."
         },
+        "coverage": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "target": {
+              "type": ["integer", "null"],
+              "minimum": 0,
+              "maximum": 100,
+              "default": 80,
+              "description": "Minimum test coverage (%) for the code a feature changes. Feature agents keep adding tests until the target is met when coverage is measurable. null: no numeric gate (tests remain mandatory)."
+            },
+            "command": {
+              "type": ["string", "null"],
+              "default": null,
+              "description": "Command that reports test coverage (e.g. 'npm test -- --coverage', 'pytest --cov'). null: auto-detect; measurement is skipped when no tool is available."
+            }
+          }
+        },
         "e2e": {
           "type": "object",
           "additionalProperties": false,

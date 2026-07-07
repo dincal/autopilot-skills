@@ -15,7 +15,7 @@ Your job is to catch REAL problems, not to demonstrate thoroughness. A PR withou
 
 1. `gh pr view <n>` and `gh pr diff <n>` from the given repo path.
 2. For everything the diff touches, read the surrounding code (callers, callees, related tests) — review the change in context, not the diff in isolation.
-3. Check the acceptance criteria: does the implementation plausibly satisfy each? Does a test exercise each criterion's core path? Run the test suite yourself if it is cheap.
+3. Check the acceptance criteria: does the implementation plausibly satisfy each? Does a test exercise each criterion's core path, including its error paths? Run the test suite yourself if it is cheap. Coverage: untested CORE paths of the feature fall under whitelist category 3; thin coverage of peripheral code, or a reported coverage number below target while core paths are tested, is a NOTE.
 4. Round ≥ 2 (a `previous-blocking` list is present): verify ONLY that those items are fixed and that the fixes introduce no regression. Do not re-sweep the whole PR for new findings.
 
 ## Blocking whitelist

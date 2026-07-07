@@ -57,7 +57,7 @@ If the overview was derived (source 2) and the evidence is thin or ambiguous, co
    - `parallelFeatures` (1–4) — default 2
    - approval gates (`goalPrompt`/`plan`/`merge`: ask vs auto) — default ask; `fastMode` on/off
    - `language` for generated docs — default ko
-3. Fill from the survey: `git.baseBranch`, `testing.testCommand`, `testing.e2e.runCommand`/`url` if confidently detected (otherwise leave null for auto-detection at run time).
+3. Fill from the survey: `git.baseBranch`, `testing.testCommand`, `testing.coverage.command` (e.g. `npm test -- --coverage`, `pytest --cov`), `testing.e2e.runCommand`/`url` if confidently detected (otherwise leave null for auto-detection at run time).
 4. Write `.autopilot/config.json`.
 
 ## Step 4 — goal.md

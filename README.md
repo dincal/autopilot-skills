@@ -68,7 +68,8 @@ Created by `/autopilot-init`; JSON Schema in [`templates/config.schema.json`](te
 | `approvals.goalPrompt` / `.plan` / `.merge` | `ask` | `ask` pauses for your approval; `auto` proceeds |
 | `approvals.newTodos` | `auto` | Gate for agent-generated todo items |
 | `review.maxReviewIterations` | `3` | Fix-and-re-review cycles before escalating to you |
-| `testing.requireTests` | `true` | Every feature must ship with tests |
+| `testing.requireTests` | `true` | Every feature must ship with tests (acceptance criteria + edge cases + error paths) |
+| `testing.coverage.target` | `80` | Minimum coverage (%) for changed code — feature agents keep adding tests until met when coverage is measurable (`testing.coverage.command`) |
 | `git.baseBranch` / `.branchPrefix` / `.mergeMethod` | `main` / `autopilot/` / `squash` | Git/PR policy |
 | `language` | `ko` | Language of generated documents and PR bodies (code/commits/PR titles are always English) |
 

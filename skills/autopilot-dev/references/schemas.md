@@ -75,6 +75,8 @@ The spawn prompt must be fully self-contained:
 - worktree: /abs/path (work ONLY inside this directory)
 - branch: autopilot/ap-012-price-filter (already checked out in the worktree)
 - test-command: npm test
+- coverage-target: 80            <!-- from testing.coverage.target; omit when null -->
+- coverage-command: npm test -- --coverage   <!-- from testing.coverage.command; omit when unknown -->
 - doc-language: ko
 
 ## GOAL PROMPT
@@ -97,6 +99,7 @@ The agent's final message MUST end with this fenced block:
 - feature-id: F-2026-07-07-a
 - tests: passing | failing
 - test-evidence: <command run + summary of output>
+- coverage: <measured % for the changed code, or "not measured — <why>">
 - files-changed:
   - path — one-line what/why
 - tests-added:
@@ -132,7 +135,7 @@ Compile the decisions section from ALL of:
 - the WORK SUMMARY's `autonomous-decisions` and `deviations-from-plan` entries
 - review arbitration: blocking items the orchestrator downgraded to notes
 
-After these two sections, append: acceptance-criteria checklist, test evidence, how to verify, and references (feature id, AP-### todos, branch doc).
+After these two sections, append: acceptance-criteria checklist, test evidence (including measured coverage when available), how to verify, and references (feature id, AP-### todos, branch doc).
 
 If later review rounds add autonomous decisions (e.g. arbitration downgrades), update the PR body's top section via `gh pr edit --body` so it stays complete at merge time.
 

@@ -19,6 +19,10 @@
   "testing": {
     "requireTests": true,
     "testCommand": null,
+    "coverage": {
+      "target": 80,
+      "command": null
+    },
     "e2e": {
       "runCommand": null,
       "readyCheck": null,

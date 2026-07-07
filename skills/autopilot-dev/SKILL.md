@@ -49,7 +49,7 @@ Rewrite `.autopilot/state.json` at every phase transition (schema in `references
 
 - NEVER write `.autopilot/goal.md`. Not you, not any agent you spawn. Goal changes go through `/autopilot-goal` only. (A plugin hook enforces this; do not attempt to bypass it via Bash.)
 - Generated documents (todo, branch docs, CHANGELOG, PR bodies) in `config.language` (default `ko`); code, comments, commit messages, branch names, and PR titles in English.
-- Every feature ships with tests (`testing.requireTests`); a feature whose tests don't pass is not done.
+- Every feature ships with tests (`testing.requireTests`) covering acceptance criteria, edge cases, and error paths — aim for `testing.coverage.target` on changed code; a feature whose tests don't pass is not done.
 - Reviews follow `references/review-protocol.md`: approve-biased, blocking only for real defects. You act only on BLOCKING items, never on NOTES.
 - At every phase boundary, check whether the user has asked to stop or pause; if so, finish writing state.json and stop cleanly.
 - When gates are `auto`, do not invent extra per-iteration confirmation questions — that defeats loop mode. Keep the user informed with concise progress updates instead.
