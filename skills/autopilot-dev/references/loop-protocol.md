@@ -63,13 +63,20 @@ Per feature as it finishes development:
    - If the project file structure changed, refresh the CLAUDE.md managed section snapshot (between the AUTOPILOT markers only).
    - Remove the worktree (`git worktree remove <path>`, then `git worktree prune`).
 4. Commit the `.autopilot/` doc updates on the RUN branch (pull it first — the feature merges happened on GitHub) with message `chore(autopilot): close iteration <k>`, and push. Single-feature mode: commit them on the feature branch before the PR instead.
-5. Run PR: after the first feature merge of the run, open the run PR — `gh pr create --base <git.baseBranch> --head <run branch>` — with the body per the "Run PR body" schema in `schemas.md`. On later iterations keep its body current with `gh pr edit`.
+5. Run PR: after the first feature merge of the run, open the run PR — `gh pr create --base <git.baseBranch> --head <run branch>` — with the body per the "Run PR body" schema in `schemas.md`. The run PR then STAYS OPEN and grows across iterations (keep its body current with `gh pr edit`); it is finalized and gated only at run end, and its existence never justifies stopping the loop.
 
 ## Loop continuation
 
-1. Increment `run.iteration`. Report the iteration compactly: merged PRs, failed/abandoned features, todo count remaining.
-2. Stop when: user asked; `loop.maxIterations` > 0 reached; `stopOnFailure` and something failed; or goal met (all Success Criteria verified in Phase A of the NEXT iteration — goal completion is always judged against the running app, not assumptions). Otherwise continue with Phase A.
-3. `single-feature` mode: always stop after Phase E, with `run.phase: "idle"`.
+**Looping is the default.** After Phase E, return to Phase A on the SAME run branch and keep producing features — a run accumulates features indefinitely until an explicit stop condition fires. One iteration is never "done"; opening the run PR does not mean the run is ending.
+
+1. Increment `run.iteration`. Report compactly: merged feature PRs, failed/abandoned features, todos remaining. Then continue — do NOT ask "should I continue?" (in loop mode continuing IS the user's standing instruction; they stop by saying so).
+2. The next iteration's features fork from the CURRENT run branch tip (which now contains everything merged so far), and each gets a FRESH feature branch and a FRESH feature PR. NEVER stack follow-up features onto an existing feature branch or push more work onto an already-open/merged feature PR.
+3. Stop ONLY when one of these fires:
+   - the user asked to stop or pause;
+   - `loop.maxIterations` > 0 and the count is reached (0 means infinite);
+   - `stopOnFailure` is true and a feature failed this iteration;
+   - the goal is met — a HIGH bar: EVERY Success Criterion in goal.md verified against the actually-running app during Phase A, with per-criterion evidence listed in the final report. Any criterion unverified or ambiguous → the goal is NOT met; generate the next gap todos and continue.
+4. `single-feature` mode: always stop after Phase E, with `run.phase: "idle"`.
 
 ## Run end (any stop reason: user stop, limits, failure, goal met)
 
