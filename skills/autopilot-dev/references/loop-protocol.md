@@ -61,3 +61,20 @@ Per feature as it finishes development:
 1. Increment `run.iteration`. Report the iteration compactly: merged PRs, failed/abandoned features, todo count remaining.
 2. Stop when: user asked; `loop.maxIterations` > 0 reached; `stopOnFailure` and something failed; or goal met (all Success Criteria verified in Phase A of the NEXT iteration — goal completion is always judged against the running app, not assumptions). Otherwise continue with Phase A.
 3. `single-feature` mode: always stop after Phase E, with `run.phase: "idle"`.
+
+## Unattended defaults (`unattended: true`)
+
+No AskUserQuestion anywhere. Each decision point that normally asks resolves as follows — always logged to the run log and listed in the end-of-run report:
+
+- **Dirty tree at preflight** → `git stash push -u -m "autopilot-unattended-<runId>"`; restore the stash when the run ends (success or not).
+- **Stale state.json** → resume from the recorded phase when state and worktrees are consistent; otherwise clean up (stop leftover tasks, remove worktrees, todos back to `pending`) and start fresh.
+- **Orphan worktrees at preflight** → remove them (only paths under the worktree root).
+- **Phase A, `approvals.newTodos`** → auto: add all drafted gap items.
+- **Phase B, design check** → decide the design yourself (your recommended option), record it in design.md as `Decided by: agent (unattended run)`.
+- **Phase B, `approvals.goalPrompt` / `approvals.plan`** → auto.
+- **Phase D, review iteration cap exceeded** → PARK the feature: see review-protocol "Unattended". Never merge a PR that reviewers did not approve.
+- **Phase E, `approvals.merge`** → auto-merge approved PRs.
+- **Phase E, risky rebase conflict / tests failing after rebase and one fix attempt** → park the feature the same way; continue with the rest.
+- **Goal ambiguity** → never write goal.md; interpret conservatively (prefer the literal Success Criteria) and note the ambiguity in the report.
+
+Parked features: leave the branch and open PR intact, post a `gh pr comment` in `config.language` explaining what blocks it, set feature status `abandoned` in state.json, and set the underlying todos to `blocked` with a note referencing the PR — `blocked` items are not re-selected in later iterations, which prevents an unattended loop from endlessly recreating the same stuck feature.

@@ -32,6 +32,8 @@ After `review.maxReviewIterations` rounds without dual approval, STOP iterating 
 - **Abandon feature** — close the PR (`gh pr close`), branch doc `status: abandoned`, todos back to `pending` with a note.
 - **Pause autopilot** — leave the PR open, write state, stop the run cleanly.
 
+**Unattended (`unattended: true`)**: do not ask — PARK the feature instead. Leave the PR open, post a `gh pr comment` (in `config.language`) summarizing the unresolved blocking items and that it needs human review, set feature status `abandoned`, set its todos to `blocked` with a note referencing the PR, and continue the loop with the other features. Never "merge anyway" without a human.
+
 ## Anti-nitpick guardrails (enforced by YOU)
 
 - A BLOCKING item is valid only if it cites the blocking whitelist: incorrect behavior/bug, security or data-loss risk, failing or missing tests for the feature's core path, acceptance criteria demonstrably unmet, or breakage of existing functionality. A blocking item without a whitelist justification is downgraded to a note — log it.

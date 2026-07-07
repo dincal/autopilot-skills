@@ -29,6 +29,11 @@
       "default": false,
       "description": "Minimize review: skip E2E testing, cap review iterations at 1, code review checks critical defects (bugs, security) only. Orthogonal to mode."
     },
+    "unattended": {
+      "type": "boolean",
+      "default": false,
+      "description": "Unattended mode: the dev loop never asks the user anything — all approval gates behave as auto and every decision point resolves to its documented safe default (logged and reported). goal.md still requires explicit user consent and is never written. Applies to the autopilot dev skill only."
+    },
     "parallelFeatures": {
       "type": "integer",
       "minimum": 1,

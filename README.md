@@ -62,6 +62,7 @@ Created by `/autopilot-init`; JSON Schema in [`templates/config.schema.json`](te
 |---|---|---|
 | `mode` | `loop` | `loop` (repeat until stopped) or `single-feature` (one feature, no loop, no worktrees) |
 | `fastMode` | `false` | Minimize review: skip E2E, one review round, critical defects only |
+| `unattended` | `false` | The dev loop never asks you anything: gates behave as `auto`, decision points use documented safe defaults, stuck features get parked (PR left open with a comment) instead of force-merged. goal.md still requires your consent |
 | `parallelFeatures` | `2` | Features developed concurrently per iteration (1–4) |
 | `approvals.goalPrompt` / `.plan` / `.merge` | `ask` | `ask` pauses for your approval; `auto` proceeds |
 | `approvals.newTodos` | `auto` | Gate for agent-generated todo items |
@@ -72,7 +73,7 @@ Created by `/autopilot-init`; JSON Schema in [`templates/config.schema.json`](te
 
 ## Guarantees
 
-- **`goal.md` is yours.** Agents can never write it without your explicit approval: every skill and agent is instructed not to, and a `PreToolUse` hook hard-denies writes unless `/autopilot-goal` has just obtained your consent (one-shot token, 15-minute validity).
+- **`goal.md` is yours.** Agents can never write it without your explicit approval — even in unattended mode: every skill and agent is instructed not to, and a `PreToolUse` hook hard-denies writes unless `/autopilot-goal` has just obtained your consent (one-shot token, 15-minute validity).
 - **Your CLAUDE.md text is safe.** Autopilot only regenerates the section between `<!-- AUTOPILOT:BEGIN -->` and `<!-- AUTOPILOT:END -->` markers.
 - **`todo.md` reflects only unbuilt work**, and your items always outrank the agent's.
 - **Nothing merges with failing tests**, and nothing ships without review unless you configured it that way.

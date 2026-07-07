@@ -3,6 +3,7 @@
   "language": "ko",
   "mode": "loop",
   "fastMode": false,
+  "unattended": false,
   "parallelFeatures": 2,
   "approvals": {
     "goalPrompt": "ask",

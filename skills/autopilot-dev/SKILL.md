@@ -22,6 +22,7 @@ Detailed protocols live next to this file; read each when you reach the relevant
   - "develop with autopilot" (no specific feature) → configured `mode` (default `loop`)
   - "develop <specific feature> with autopilot" / "이 피처만 오토파일럿으로" → `single-feature` mode for that feature
   - "fast" / "빠르게" qualifiers → `fastMode: true` for this run
+  - "unattended" / "무인모드" / "묻지 말고 알아서" qualifiers → `unattended: true` for this run
 
 ## Preflight (every run)
 
@@ -52,6 +53,15 @@ Rewrite `.autopilot/state.json` at every phase transition (schema in `references
 - Reviews follow `references/review-protocol.md`: approve-biased, blocking only for real defects. You act only on BLOCKING items, never on NOTES.
 - At every phase boundary, check whether the user has asked to stop or pause; if so, finish writing state.json and stop cleanly.
 - When gates are `auto`, do not invent extra per-iteration confirmation questions — that defeats loop mode. Keep the user informed with concise progress updates instead.
+
+## Unattended mode (`unattended: true`)
+
+The user is not watching. NEVER call AskUserQuestion anywhere in the run:
+
+- All `approvals.*` gates behave as `auto`, regardless of their configured values.
+- Every decision point that would normally ask resolves to its safe default, defined in `references/loop-protocol.md` ("Unattended defaults") and `references/review-protocol.md` (iteration cap). Log each autonomous decision to the run log and list them all in the end-of-run report.
+- goal.md is NOT an exception you can claim: unattended mode never writes goal.md under any circumstance. If the run concludes the goal itself needs changing, record that in the report and stop or continue without it.
+- A feature that cannot proceed without a human (review cap exceeded, unresolvable conflict) is PARKED — left for the user with an explanatory PR comment — never force-merged.
 
 ## Stopping
 
