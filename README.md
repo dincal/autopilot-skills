@@ -38,7 +38,7 @@ claude --plugin-dir /path/to/autopilot-skills
 | `/autopilot-goal [guidance]` | Interview you about the project's ultimate and short-term goals, then write `goal.md` — only with your explicit approval |
 | `/autopilot-todo [ideas]` | Interview you about features you want and add them to `todo.md` as user-sourced items (top selection rank) |
 | `/autopilot-config [change]` | Show current settings and update `config.json` through an interview (validated against the schema) |
-| `/autopilot-project-review [focus]` | Coldly assess how the market would react to launching this project (no cheerleading — base rates, competitors, ranked risks), then update `goal.md`/`todo.md` through an interview |
+| `/autopilot-project-review` | Coldly assess how the market would react to launching this project (no cheerleading — base rates, competitors, ranked risks), then update `goal.md`/`todo.md` through an interview |
 | `/autopilot-sync` | Reconcile every autopilot file with the current repo reality (code, git history, merged PRs) |
 | Say **"develop with autopilot"** / **"오토파일럿으로 개발해"** | Start the autonomous dev loop (a skill, not a slash command) |
 
