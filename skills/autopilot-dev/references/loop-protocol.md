@@ -28,7 +28,7 @@ Loop mode only — single-feature mode works directly against `git.baseBranch` w
 
 For each selected feature:
 
-1. **Design check**: if it involves user-facing UI/UX or a significant architectural choice, YOU frame the design first — 2–3 concrete options with a recommendation — then ask the user to decide (AskUserQuestion). For visual design, invite the user to supply mockups or use their design tooling; offer your recommended direction as the default so the loop never blocks indefinitely. Record the outcome as a dated entry in `design.md`.
+1. **Design check**: if it involves user-facing UI/UX or a significant architectural choice, YOU frame the design first — 2–3 concrete options with a recommendation — then ask the user to decide (AskUserQuestion). For visual design, invite the user to supply mockups or use their design tooling; offer your recommended direction as the default so the loop never blocks indefinitely. Record the outcome as a dated entry, routed by type: UI/UX decisions → `design.md`; development/architecture decisions → `tech-design.md`. Never mix the two files' scopes.
 2. **Goal Prompt** — a one-page brief: Objective, User story, Acceptance criteria (observable; copied/refined from the todo items), Constraints, Out of scope.
    - Gate `approvals.goalPrompt = ask`: show the full text, ask per feature — Approve / Edit (revise and re-ask) / Drop this feature (todo back to `pending`) / Stop autopilot.
 3. **Implementation Plan** — explore the codebase and write: approach, files to touch, reusable existing utilities, test plan (which tests prove which acceptance criteria), risks. With N > 1, delegate exploration to parallel read-only Explore agents to protect your own context.
@@ -96,7 +96,7 @@ No AskUserQuestion anywhere. Each decision point that normally asks resolves as 
 - **Stale state.json** → resume from the recorded phase when state and worktrees are consistent; otherwise clean up (stop leftover tasks, remove worktrees, todos back to `pending`) and start fresh.
 - **Orphan worktrees at preflight** → remove them (only paths under the worktree root).
 - **Phase A, `approvals.newTodos`** → auto: add all drafted gap items.
-- **Phase B, design check** → decide the design yourself (your recommended option), record it in design.md as `Decided by: agent (unattended run)`.
+- **Phase B, design check** → decide the design yourself (your recommended option), record it as `Decided by: agent (unattended run)` in the appropriate doc — `design.md` for UI/UX, `tech-design.md` for technical decisions.
 - **Phase B, `approvals.goalPrompt` / `approvals.plan`** → auto.
 - **Phase D, review iteration cap exceeded** → PARK the feature: see review-protocol "Unattended". Never merge a PR that reviewers did not approve.
 - **Phase E, `approvals.merge`** → auto-merge approved feature PRs into the RUN branch only.

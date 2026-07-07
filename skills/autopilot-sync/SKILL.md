@@ -12,7 +12,7 @@ If `.autopilot/` does not exist, tell the user to run `/autopilot-init` and STOP
 
 ## Step 1 — Load
 
-Read all of: `.autopilot/config.json`, `goal.md`, `design.md`, `todo.md`, `CHANGELOG.md`, every `branch/*.md`, `CLAUDE.md`, and `.autopilot/state.json` if present (note `lastSyncCommit`).
+Read all of: `.autopilot/config.json`, `goal.md`, `design.md`, `tech-design.md`, `todo.md`, `CHANGELOG.md`, every `branch/*.md`, `CLAUDE.md`, and `.autopilot/state.json` if present (note `lastSyncCommit`).
 
 ## Step 2 — Gather reality
 
@@ -30,9 +30,14 @@ For each pending item, verify against the actual code whether it is genuinely NO
 - Preserve IDs, `source`, priorities, and user wording. NEVER invent new `user`-source items; new gap items you discover are `source: agent`.
 - Re-sort by the schema rule: source (user first) → priority → ID.
 
-## Step 4 — design.md
+## Step 4 — design.md & tech-design.md
 
-Append newly observable design decisions (new frameworks, storage, architectural patterns since last sync) as dated entries marked `Decided by: agent (observed from code)`. Append-only: never delete or rewrite existing entries.
+Append newly observable decisions since last sync as dated entries marked `Decided by: agent (observed from code)`, routed by type:
+
+- UI/UX changes (design system, components, layout/UX flows) → `design.md`
+- Technical changes (frameworks, storage, architecture, data model) → `tech-design.md` (create from `${CLAUDE_PLUGIN_ROOT}/templates/tech-design.template.md` if missing)
+
+Append-only: never delete or rewrite existing entries. Exception — entries that historically landed in the wrong file may be MOVED once to the correct file, preserving their text and dates verbatim (note the move in the destination entry).
 
 ## Step 5 — CHANGELOG.md
 

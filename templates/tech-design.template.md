@@ -1,9 +1,8 @@
-# UI/UX Design Decisions
+# Technical Design Decisions
 
-<!-- Append-only, dated log of USER-FACING design decisions: layout, visual
-     style, interaction patterns, UX flows, copy tone, component conventions.
-     Development/technical design (architecture, data model, stack choices)
-     belongs in tech-design.md, NOT here.
+<!-- Append-only, dated log of DEVELOPMENT design decisions: architecture,
+     data model, storage, API contracts, framework/library choices, code
+     patterns, infrastructure. UI/UX design belongs in design.md, NOT here.
      Never delete or rewrite existing entries — supersede them with a new entry.
      Entries authored by the user take precedence over agent-observed ones. -->
 

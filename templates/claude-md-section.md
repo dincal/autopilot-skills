@@ -17,7 +17,8 @@ This project is managed with the **autopilot** Claude Code plugin.
 
 - `.autopilot/config.json` — execution settings: mode (loop / single-feature), fastMode, parallelism, approval gates, review, git policy.
 - `.autopilot/goal.md` — ultimate + short-term goals. NEVER edit without explicit user consent; use `/autopilot-goal`.
-- `.autopilot/design.md` — dated, append-only design decisions.
+- `.autopilot/design.md` — dated, append-only UI/UX design decisions.
+- `.autopilot/tech-design.md` — dated, append-only development/technical design decisions.
 - `.autopilot/todo.md` — features NOT yet built (schema legend inside the file). User-sourced items outrank agent-sourced ones.
 - `.autopilot/branch/<branch>.md` — per-branch feature list, goal prompt, plan, work summary, review log.
 - `.autopilot/CHANGELOG.md` — Keep-a-Changelog style, per-version entries.

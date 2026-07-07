@@ -69,7 +69,8 @@ If the overview was derived (source 2) and the evidence is thin or ambiguous, co
 
 Create only what is missing, from `${CLAUDE_PLUGIN_ROOT}/templates/`:
 
-- `design.md` from `design.template.md` — seed it with design decisions you can OBSERVE from the code (framework choices, architecture, storage), each marked `Decided by: agent (observed from code)`.
+- `design.md` from `design.template.md` — UI/UX design decisions ONLY. Seed it with user-facing conventions you can OBSERVE (design system, component library, layout and UX patterns), each marked `Decided by: agent (observed from code)`.
+- `tech-design.md` from `tech-design.template.md` — development design decisions ONLY. Seed it with technical decisions you can OBSERVE from the code (framework choices, architecture, data model, storage), same marking.
 - `todo.md` from `todo.template.md` — keep the schema legend header; leave items empty unless the user volunteered features during init (add those as `source: user`).
 - `CHANGELOG.md` from `changelog.template.md` — if git tags exist, add one section per existing tag with a one-line summary from `git log` between tags; otherwise just `[Unreleased]`.
 - `branch/` directory with a doc for the current branch from `branch.template.md` (fill BRANCH_NAME/DATE/BASE_BRANCH; features/pr may be `-`).

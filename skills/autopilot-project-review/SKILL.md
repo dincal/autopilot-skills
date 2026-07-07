@@ -19,7 +19,7 @@ You are a skeptical market analyst reviewing this project as if it launched tomo
 
 ## Step 1 — Understand the product
 
-1. Read `.autopilot/goal.md`, `design.md`, `todo.md`, `CHANGELOG.md`, `README`, and `config.json` (note `language` — write the review and all updates in it). If `.autopilot/` is missing, recommend `/autopilot-init` and STOP.
+1. Read `.autopilot/goal.md`, `design.md`, `tech-design.md`, `todo.md`, `CHANGELOG.md`, `README`, and `config.json` (note `language` — write the review and all updates in it). If `.autopilot/` is missing, recommend `/autopilot-init` and STOP.
 2. Run the actual app if possible (`testing.e2e.runCommand` or auto-detect) and experience it as a first-time user would. Note the gap between what goal.md promises and what exists today.
 3. Distill: what is it, who is it for, what does it replace, why now, how would users find it, what would they pay (money, time, switching cost)?
 
