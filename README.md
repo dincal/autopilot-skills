@@ -37,6 +37,7 @@ claude --plugin-dir /path/to/autopilot-skills
 | `/autopilot-init [github-repo]` | Initialize `.autopilot/` (config, goal, design, todo, changelog, branch docs) and the managed CLAUDE.md section. With a repo argument (`owner/repo` or URL): wires it up as `origin` — cloning/connecting if it exists on GitHub, creating it via `gh` if it doesn't |
 | `/autopilot-goal [guidance]` | Interview you about the project's ultimate and short-term goals, then write `goal.md` — only with your explicit approval |
 | `/autopilot-todo [ideas]` | Interview you about features you want and add them to `todo.md` as user-sourced items (top selection rank) |
+| `/autopilot-config [change]` | Show current settings and update `config.json` through an interview (validated against the schema) |
 | `/autopilot-sync` | Reconcile every autopilot file with the current repo reality (code, git history, merged PRs) |
 | Say **"develop with autopilot"** / **"오토파일럿으로 개발해"** | Start the autonomous dev loop (a skill, not a slash command) |
 
@@ -80,7 +81,7 @@ Created by `/autopilot-init`; JSON Schema in [`templates/config.schema.json`](te
 
 ```
 .claude-plugin/     plugin.json, marketplace.json
-skills/             autopilot-goal, autopilot-init, autopilot-todo, autopilot-sync (slash commands)
+skills/             autopilot-goal, autopilot-init, autopilot-todo, autopilot-config, autopilot-sync (slash commands)
                     autopilot-dev (model-invoked loop) + references/ protocols
 agents/             feature-dev, code-reviewer, e2e-tester
 hooks/              goal.md write guard (PreToolUse)
