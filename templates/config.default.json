@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "language": "ko",
+  "mode": "loop",
+  "fastMode": false,
+  "parallelFeatures": 2,
+  "approvals": {
+    "goalPrompt": "ask",
+    "plan": "ask",
+    "newTodos": "auto",
+    "merge": "ask"
+  },
+  "review": {
+    "codeReview": true,
+    "e2eTest": true,
+    "maxReviewIterations": 3
+  },
+  "testing": {
+    "requireTests": true,
+    "testCommand": null,
+    "e2e": {
+      "runCommand": null,
+      "readyCheck": null,
+      "url": null
+    }
+  },
+  "git": {
+    "baseBranch": "main",
+    "branchPrefix": "autopilot/",
+    "mergeMethod": "squash",
+    "deleteBranchAfterMerge": true,
+    "worktreeRoot": null
+  },
+  "loop": {
+    "maxIterations": 0,
+    "stopOnFailure": true
+  }
+}

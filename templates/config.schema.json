@@ -1,0 +1,124 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Autopilot configuration (.autopilot/config.json)",
+  "type": "object",
+  "required": ["version", "mode"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "version": {
+      "type": "integer",
+      "const": 1,
+      "description": "Config schema version."
+    },
+    "language": {
+      "type": "string",
+      "default": "ko",
+      "description": "Language for generated .autopilot documents and PR bodies (e.g. ko, en, ja). Code, commits, and PR titles are always English."
+    },
+    "mode": {
+      "type": "string",
+      "enum": ["loop", "single-feature"],
+      "default": "loop",
+      "description": "loop: repeat iterations until the user stops. single-feature: develop exactly one feature, no loop, no worktrees."
+    },
+    "fastMode": {
+      "type": "boolean",
+      "default": false,
+      "description": "Minimize review: skip E2E testing, cap review iterations at 1, code review checks critical defects (bugs, security) only. Orthogonal to mode."
+    },
+    "parallelFeatures": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 4,
+      "default": 2,
+      "description": "Number of features developed in parallel per loop iteration (each in its own git worktree)."
+    },
+    "approvals": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "User approval gates. ask: pause and ask the user. auto: proceed without asking.",
+      "properties": {
+        "goalPrompt": { "$ref": "#/definitions/gate", "description": "Approval of each feature's Goal Prompt." },
+        "plan": { "$ref": "#/definitions/gate", "description": "Approval of each feature's implementation Plan." },
+        "newTodos": { "$ref": "#/definitions/gate", "description": "Approval of agent-generated todo items." },
+        "merge": { "$ref": "#/definitions/gate", "description": "Approval before merging each approved PR." }
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "codeReview": { "type": "boolean", "default": true, "description": "Run the code-reviewer agent on each PR." },
+        "e2eTest": { "type": "boolean", "default": true, "description": "Run the e2e-tester agent on each PR." },
+        "maxReviewIterations": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 3,
+          "description": "Max fix-and-re-review cycles per PR before escalating to the user."
+        }
+      }
+    },
+    "testing": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "requireTests": { "type": "boolean", "default": true, "description": "Every feature must ship with tests." },
+        "testCommand": {
+          "type": ["string", "null"],
+          "default": null,
+          "description": "Command to run the test suite. null: auto-detect from the repo each run."
+        },
+        "e2e": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "runCommand": { "type": ["string", "null"], "default": null, "description": "Command to start the app. null: auto-detect." },
+            "readyCheck": { "type": ["string", "null"], "default": null, "description": "Command that exits 0 when the app is ready (e.g. curl health check)." },
+            "url": { "type": ["string", "null"], "default": null, "description": "Base URL of the running app, for HTTP/browser checks." }
+          }
+        }
+      }
+    },
+    "git": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "baseBranch": { "type": "string", "default": "main", "description": "Branch that feature branches fork from and PRs target." },
+        "branchPrefix": { "type": "string", "default": "autopilot/", "description": "Prefix for autopilot-created branches." },
+        "mergeMethod": { "type": "string", "enum": ["squash", "merge", "rebase"], "default": "squash" },
+        "deleteBranchAfterMerge": { "type": "boolean", "default": true },
+        "worktreeRoot": {
+          "type": ["string", "null"],
+          "default": null,
+          "description": "Directory for feature worktrees. null: sibling directory ../<repoName>__autopilot/ next to the repo."
+        }
+      }
+    },
+    "loop": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "maxIterations": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 0,
+          "description": "Stop after this many loop iterations. 0: run until the user stops."
+        },
+        "stopOnFailure": {
+          "type": "boolean",
+          "default": true,
+          "description": "Halt the loop at the end of an iteration in which a feature failed."
+        }
+      }
+    }
+  },
+  "definitions": {
+    "gate": {
+      "type": "string",
+      "enum": ["ask", "auto"]
+    }
+  }
+}

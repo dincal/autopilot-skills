@@ -1,0 +1,14 @@
+{
+  "name": "autopilot",
+  "displayName": "Autopilot",
+  "version": "0.1.0",
+  "description": "Goal-driven autonomous development: parallel feature loops in git worktrees with per-feature PRs, approve-biased code review, and E2E verification agents.",
+  "author": {
+    "name": "Eddie",
+    "email": "eddie@hiconsy.com"
+  },
+  "license": "MIT",
+  "repository": "https://github.com/dincal/autopilot-skills",
+  "keywords": ["autopilot", "autonomous-development", "worktree", "pull-request", "workflow"],
+  "hooks": "./hooks/hooks.json"
+}

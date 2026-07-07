@@ -1,0 +1,14 @@
+{
+  "name": "autopilot-marketplace",
+  "owner": {
+    "name": "Eddie",
+    "email": "eddie@hiconsy.com"
+  },
+  "plugins": [
+    {
+      "name": "autopilot",
+      "source": "./",
+      "description": "Goal-driven autonomous development loop for Claude Code: keeps CLAUDE.md and .autopilot/ docs in sync, develops N features in parallel git worktrees, ships per-feature PRs with review and E2E agents."
+    }
+  ]
+}
