@@ -9,6 +9,7 @@ This project is managed with the **autopilot** Claude Code plugin.
 - `/autopilot-init [github-repo]` — initialize or repair the `.autopilot/` directory and this CLAUDE.md section; with a repo argument, connect or create the GitHub remote.
 - `/autopilot-todo [ideas]` — interview the user and add user-sourced items to `.autopilot/todo.md`.
 - `/autopilot-config [change]` — show and update `.autopilot/config.json` through an interview.
+- `/autopilot-project-review [focus]` — cold market-reaction review of the project; updates goal/todo via interview.
 - `/autopilot-sync` — reconcile all `.autopilot/` files and this section with the current state of the repository.
 - Saying **"develop with autopilot" / "오토파일럿으로 개발해"** starts the autonomous development loop (a skill, not a slash command).
 
@@ -20,6 +21,7 @@ This project is managed with the **autopilot** Claude Code plugin.
 - `.autopilot/todo.md` — features NOT yet built (schema legend inside the file). User-sourced items outrank agent-sourced ones.
 - `.autopilot/branch/<branch>.md` — per-branch feature list, goal prompt, plan, work summary, review log.
 - `.autopilot/CHANGELOG.md` — Keep-a-Changelog style, per-version entries.
+- `.autopilot/reviews/` — saved market-reaction review reports from `/autopilot-project-review`.
 - `.autopilot/state.json`, `.autopilot/logs/` — runtime state (gitignored).
 
 ### Project snapshot
