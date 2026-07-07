@@ -75,6 +75,7 @@ Created by `/autopilot-init`; JSON Schema in [`templates/config.schema.json`](te
 
 - **`goal.md` is yours.** Agents can never write it without your explicit approval — even in unattended mode: every skill and agent is instructed not to, and a `PreToolUse` hook hard-denies writes unless `/autopilot-goal` has just obtained your consent (one-shot token, 15-minute validity).
 - **Your CLAUDE.md text is safe.** Autopilot only regenerates the section between `<!-- AUTOPILOT:BEGIN -->` and `<!-- AUTOPILOT:END -->` markers.
+- **Every PR confesses first.** The PR body always leads with a highlighted "decisions made without user approval" section — design choices, auto-passed gates, plan deviations, review-arbitration overrides — followed by the work summary, so you can audit what was decided for you before merging.
 - **`todo.md` reflects only unbuilt work**, and your items always outrank the agent's.
 - **Nothing merges with failing tests**, and nothing ships without review unless you configured it that way.
 

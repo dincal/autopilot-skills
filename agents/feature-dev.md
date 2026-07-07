@@ -42,7 +42,10 @@ Your final message MUST end with the fenced block below — the orchestrator par
   - <path> — <what it proves>
 - how-to-verify: <steps a human can follow>
 - deviations-from-plan: <or "none">
+- autonomous-decisions: <choices you made that the user might have wanted to decide — UX behavior, naming, data formats, added dependencies, trade-offs — or "none">
 - open-questions: <or "none">
 ```
+
+Be generous in `autonomous-decisions`: anything you chose that was not literally dictated by the Goal Prompt or Plan belongs there — it is surfaced at the top of the PR so the user can review what was decided for them. Omitting a real decision is worse than listing a trivial one.
 
 Report honestly: if tests fail after your best effort, say `tests: failing` and explain — a truthful failure is recoverable, a false "passing" poisons the whole loop.

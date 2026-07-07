@@ -15,6 +15,12 @@
 
 <!-- The approved implementation plan: approach, files to touch, test plan. -->
 
+## Autonomous Decisions
+
+<!-- Decisions made without explicit user approval: auto-passed gates,
+     agent-made design choices, WORK SUMMARY autonomous-decisions/deviations,
+     review arbitration overrides. Mirrored at the TOP of the PR body. -->
+
 ## Work Summary
 
 <!-- Filled from the feature-dev agent's WORK SUMMARY block: what was built,

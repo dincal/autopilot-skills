@@ -18,7 +18,7 @@ Feature `status: approved`; proceed to merge (loop-protocol Phase E).
 
 ## Any REQUEST_CHANGES → fix cycle
 
-1. Union the BLOCKING items from both reviewers, numbered. Contradictory feedback between reviewers: prefer runtime evidence (the e2e-tester ran the actual app; the code-reviewer read code). You may downgrade a code-review BLOCKING item to a note when the e2e evidence shows the behavior works — log the one-line justification in the Review Log.
+1. Union the BLOCKING items from both reviewers, numbered. Contradictory feedback between reviewers: prefer runtime evidence (the e2e-tester ran the actual app; the code-reviewer read code). You may downgrade a code-review BLOCKING item to a note when the e2e evidence shows the behavior works — log the one-line justification in the Review Log, and add the downgrade to the PR body's top "decisions made without user approval" section (`gh pr edit --body`) and the branch doc's Autonomous Decisions.
 2. NOTES are never acted on in the fix cycle and never justify another round. Carry them into the branch doc for posterity only.
 3. Re-spawn `autopilot:feature-dev` in the SAME worktree with the standard input block plus a `REVIEW FIXES` section listing only the numbered blocking items. The agent fixes exactly those, re-runs tests, commits.
 4. Push, then start the next round. From round 2 onward, reviewers verify ONLY the previous blocking items plus any regression they introduce — instruct this via the input block (`previous-blocking:` list). No new whole-PR nitpick sweeps.

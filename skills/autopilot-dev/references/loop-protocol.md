@@ -41,7 +41,7 @@ Per feature as it finishes development:
 
 1. Update any project docs the feature affects (README usage, API docs) inside the worktree; commit.
 2. Push: `git -C <worktree> push -u origin <branch>`.
-3. Create the PR: `gh pr create --base <baseBranch> --head <branch>` — title in English (conventional style), body in `config.language`, generated from the branch doc (Goal Prompt summary, work summary, test evidence, acceptance-criteria checklist). Record the PR number in state.json and the branch doc.
+3. Create the PR: `gh pr create --base <baseBranch> --head <branch>` — title in English (conventional style), body in `config.language` following the **PR body schema in `schemas.md`**: it MUST lead with the highlighted "decisions made without user approval" section (compiled from auto-passed gates, agent design decisions, WORK SUMMARY autonomous-decisions/deviations, arbitration overrides), followed by the work summary, then acceptance-criteria checklist and test evidence. Record the PR number in state.json and the branch doc.
 4. Run the review cycle per `review-protocol.md` until both reviewers APPROVE, the iteration cap escalates to the user, or the feature is abandoned.
 
 ## Phase E — Merge & Close (`phase: merging` → `docs`)
