@@ -72,4 +72,9 @@ The user is not watching. NEVER call AskUserQuestion anywhere in the run:
 
 ## Stopping
 
-On any stop (user request, config limit, failure, goal met): bring state.json to a consistent state (`run.phase: "idle"`, feature statuses final), report what was merged / in-flight / abandoned with PR links, and list any worktrees or branches intentionally left behind for resume.
+The loop cannot end silently: a plugin Stop hook blocks your turn from ending while `run.phase` is active and sends you back into the loop. Two legitimate exits:
+
+- **Full stop** (user request, config limit, failure, goal met): execute the Run end protocol, set `run.phase: "idle"`, report what was merged / in-flight / abandoned with PR links, and list any worktrees or branches intentionally left behind for resume.
+- **Pause** (user interrupted or switched topics mid-run): set `run.phase: "paused"`, report the pause in one line; the next autopilot invocation's preflight offers Resume / Clean up / Fresh start.
+
+Never end a mid-run turn without one of these — if you have nothing queued, re-read state.json and continue from the recorded phase.

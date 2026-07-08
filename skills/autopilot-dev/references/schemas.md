@@ -35,7 +35,7 @@ Rewritten atomically (full file) at every phase transition.
 }
 ```
 
-- `run.phase`: `idle | selecting | planning | developing | reviewing | merging | docs`
+- `run.phase`: `idle | paused | selecting | planning | developing | reviewing | merging | docs` — `idle`: no run / run finished; `paused`: run suspended mid-flight (resumable). A plugin Stop hook blocks the orchestrator from ending its turn while the phase is anything else, so phase transitions are what legitimately stop the loop.
 - `features[].status`: `planned | developing | dev-done | in-review | changes-requested | approved | merged | failed | abandoned`
 
 ## todo.md item

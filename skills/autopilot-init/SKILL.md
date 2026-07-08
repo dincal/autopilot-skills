@@ -89,6 +89,7 @@ Create only what is missing, from `${CLAUDE_PLUGIN_ROOT}/templates/`:
    .autopilot/state.json
    .autopilot/logs/
    .autopilot/.goal-consent
+   .autopilot/.stop-guard
    ```
 2. Print a summary: every file created/updated/skipped, warnings (e.g. missing GitHub remote), and next steps — `/autopilot-goal` if goal.md is missing, then "develop with autopilot" to start the loop.
 3. Suggest committing the new files (do not commit unless asked). If a GitHub repository was newly created in Step 1 and nothing has been pushed yet, include pushing (`git push -u origin <branch>`) in the suggestion.

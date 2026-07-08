@@ -1,6 +1,8 @@
 # Loop Protocol — one full iteration
 
-State discipline: before each phase, set `state.json` → `run.phase` and per-feature `status`, and append a line to `.autopilot/logs/run-<id>.md`. Phase values: `selecting → planning → developing → reviewing → merging → docs → idle`.
+State discipline: before each phase, set `state.json` → `run.phase` and per-feature `status`, and append a line to `.autopilot/logs/run-<id>.md`. Phase values: `selecting → planning → developing → reviewing → merging → docs → idle` (plus `paused` for a suspended run).
+
+**The loop cannot stop silently.** A plugin Stop hook blocks your turn from ending while `run.phase` is active (anything other than `idle`/`paused`) and bounces you back with instructions. The ONLY legitimate ways to stop are: complete the Run end protocol (→ `idle`), or suspend with `run.phase: "paused"` + a one-line pause report (when the user interrupts or changes topic). If you find yourself with nothing to do mid-run, you are wrong — re-read state.json and continue from the recorded phase.
 
 ## Run setup (once per run, before iteration 1)
 
