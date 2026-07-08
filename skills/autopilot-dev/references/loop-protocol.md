@@ -24,7 +24,8 @@ Loop mode only — single-feature mode works directly against `git.baseBranch` w
 3. **Pick N features** (N = `parallelFeatures`; in `single-feature` mode N = 1 and, if the user named the feature, use that):
    - Order strictly: `source: user` first (all user items before any agent item) → priority (P0 highest) → lowest ID. Respect `depends-on`: an item whose dependency is unmerged is not eligible.
    - Composition rule: one feature = one full dev cycle, minimum one user story. MERGE tightly-coupled or too-small todos into a single feature; SPLIT anything too big to land as one reviewable PR.
-   - **N is a CEILING, not a quota**: pick fewer than N whenever fewer independent, well-sized features exist — because eligible todos ran short, dependencies block items, or parallel agents would collide on the same files (merge those into one feature instead). Never pad with filler features to reach N; running 2 good features under a parallelFeatures of 4 is correct behavior.
+   - **N is a CEILING, not a quota**: pick fewer than N whenever fewer independent, well-sized features exist — because eligible todos ran short or dependencies block items. Never pad with filler features to reach N; running 2 good features under a parallelFeatures of 4 is correct behavior.
+   - Independence is CONCEPTUAL (no dependency between the features), not file-level: worktrees isolate working copies, and overlapping edits surface as ordinary rebase conflicts with a defined resolution path in Phase E. Incidental overlap (two features each adding a line to the same routes file) is fine. Treat only HEAVY overlap — two todos rewriting the same module — as a smell of hidden coupling that usually means they belong in one feature.
 4. For each feature: assign a feature id (`F-<date>-<letter>`), branch name `<git.branchPrefix><ap-ids>-<slug>` (English, kebab-case), mark its todos `selected`, and register it in state.json.
 
 ## Phase B — Plan (`phase: planning`)
