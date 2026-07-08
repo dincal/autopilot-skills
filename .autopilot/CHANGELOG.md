@@ -7,6 +7,9 @@
 
 ## [Unreleased]
 
+## [0.20.0] - 2026-07-08
+- 울트라코드 Phase C 개발 가이드: 플랜이 독립 서브태스크 3개 이상일 때 서로소 파일 소유권 fan-out + 통합 fan-in 워크플로우로 병렬 구현 (AP-001)
+
 ## [0.19.1] - 2026-07-08
 - 저장소 셀프 관리 초기화: `.autopilot/`(goal·config·design·tech-design·todo·CHANGELOG·branch), CLAUDE.md, .gitignore
 - 규칙 추가: main에 피처가 들어갈 때마다 plugin.json 버전 업 + 태그 필수 (CLAUDE.md Conventions)

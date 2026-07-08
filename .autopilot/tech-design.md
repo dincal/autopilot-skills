@@ -56,3 +56,13 @@
 ### 2026-07-08 — 기본 머지 방식: rebase
 - Decision: git.mergeMethod 기본값 rebase (논리 단위 커밋 보존)
 - Decided by: user
+
+### 2026-07-08 — 울트라코드 개발 fan-out: 파일 소유권 분할
+- Context: 울트라코드 섹션에 Phase C(기능 개발) 가이드 부재; 멀티파일 피처의 병렬 구현 요구
+- Decision: 플랜이 독립 서브태스크 ≥3개일 때만 fan-out/fan-in 워크플로우 사용. 병렬 안전성은
+  서브에이전트별 서로소 파일 소유권으로 보장(같은 worktree, 공유 표면은 병렬 단계 편집 금지),
+  통합 스테이지가 공유 파일·인터페이스·전체 테스트·커버리지를 전담. WORK SUMMARY 계약과
+  오케스트레이터의 worktree/push/PR 소유권은 불변
+- Alternatives considered: 서브에이전트별 별도 worktree(머지 오버헤드 과대), 파일 잠금 없는
+  자유 병렬(충돌 위험), 항상 fan-out(소형 피처에 낭비)
+- Decided by: user
