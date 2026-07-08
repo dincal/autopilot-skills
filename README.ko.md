@@ -84,6 +84,14 @@ goal.md 작성/수정을 위한 사용자 인터뷰. **goal.md를 바꿀 수 있
 
 **냉정한 시장 반응 평가**. 베이스레이트 회의주의(대부분의 제품은 출시해도 주목받지 못한다는 전제, "아무것도 안 하기"를 포함한 경쟁 구도, 근거 없는 칭찬 금지)로 지금 출시하면 어떤 반응일지 평가합니다. 리포트 전문은 `.autopilot/reviews/`에 저장되고, 권고안을 인터뷰로 하나씩 수락/거부받아 goal.md(동의 게이트 경유)와 todo.md에 반영합니다.
 
+### `/autopilot-dev-run [stop | restart | status]`
+
+현재 프로젝트를 **dev 모드로 실행**하는 관리형 백그라운드 프로세스를 띄웁니다 (커맨드는 `testing.e2e.runCommand` 또는 자동 감지, 로그는 `.autopilot/logs/dev-run.log`).
+
+핵심은 **자동 재실행 보장**: 플러그인의 PostToolUse 훅이 세션에서 `gh pr merge` 또는 `git pull`이 성공할 때마다 dev 프로세스를 자동 재시작합니다(10초 디바운스). 오토파일럿 런 중 메인 체크아웃은 런 브랜치에 있으므로, **기능이 머지될 때마다 dev 서버가 새 코드로 다시 뜹니다** — 프롬프트가 아니라 훅이 보장하므로 잊어버릴 수 없습니다.
+
+한계: Claude Code 세션 밖에서 한 머지(GitHub 웹 UI 등)는 이 세션에서 pull이 일어나기 전까지 트리거되지 않습니다. 핫리로드 dev 서버는 로컬 파일 수정을 자체적으로 반영합니다.
+
 ### `/autopilot-sync`
 
 모든 autopilot 문서를 저장소의 실제 상태(코드, git 히스토리, 머지된 PR)와 동기화합니다. 구현 완료된 todo 제거, design/tech-design에 관찰된 결정 추가(잘못 들어간 항목 1회 이동 포함), CHANGELOG에 머지분 반영, 브랜치 문서 갱신·아카이브, CLAUDE.md 마커 섹션 재생성. **goal.md는 읽기 전용** — 낡았으면 `/autopilot-goal`을 권할 뿐입니다.
@@ -212,6 +220,7 @@ Workflow 도구가 없는 세션이면 표준 프로토콜로 폴백합니다. `
 | `state.json` | X | 런타임 상태 (phase, 기능 상태, 재개 정보) |
 | `logs/` | X | 런별 오케스트레이션 로그 |
 | `.goal-consent`, `.stop-guard` | X | 훅용 일회성 토큰 / 루프 유지 카운터 |
+| `dev-run.json` | X | `/autopilot-dev-run` 프로세스 상태 (커맨드, pid, 자동 재시작) |
 
 todo 항목 형식:
 
