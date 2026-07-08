@@ -94,3 +94,14 @@
 - Alternatives considered: 매회 FULL 스캔(낭비), 검증 생략(goal-met 오판 위험), 이터레이션 카운트
   기반 주기 스캔(변경량과 무관)
 - Decided by: user (증분화 방향) / agent (원장 설계)
+
+### 2026-07-08 — 증분 갭 분석(기준 원장) 철회
+- Context: 바로 위 기준 원장 설계가 매 phase transition마다 state.json에 criteria/goalHash를
+  누적·재작성하게 만들어 지나치게 헤비. 얻는 값(재검증 스킵)보다 상태 관리 부담이 큼
+- Decision: 기준 원장 전면 제거 — state.json의 `criteria`/`goalHash` 스키마 삭제, FULL/INCREMENTAL
+  스캔 구분 삭제, Phase E의 증거 접기 삭제. Phase A는 goal.md와 현재 프로젝트 상태(코드베이스 +
+  실행 가능한 경우 러닝 앱)를 참고해 todo를 고르거나 새로 작성하는 단순 갭 분석으로 환원.
+  goal-met은 다시 "매 이터레이션 Phase A에서 전 기준을 러닝 앱 대비 검증"이라는 원장 없는 high bar.
+  run.agentTask(런 레벨 대기)는 원장과 무관한 Stop 훅 픽스라 유지
+- Alternatives considered: run.agentTask까지 제거(대기 bounce 버그 재발·울트라코드 워크플로 대기 불가)
+- Decided by: user

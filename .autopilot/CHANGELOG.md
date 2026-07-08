@@ -7,6 +7,9 @@
 
 ## [Unreleased]
 
+## [0.23.4] - 2026-07-08
+- 증분 갭 분석(기준 원장) 철회: 매 phase마다 state.json에 criteria/goalHash를 누적하던 방식이 과함 — `criteria`/`goalHash` 스키마 삭제, FULL/INCREMENTAL 스캔 구분·Phase E 증거 접기 제거. Phase A는 goal.md와 현재 프로젝트 상태를 참고해 todo를 고르거나 새로 작성하는 단순 갭 분석으로 환원, goal-met은 원장 없는 high bar로 복귀 (run.agentTask 런 레벨 대기는 유지)
+
 ## [0.23.3] - 2026-07-08
 - 프롬프트 문구 정리: 스킬·에이전트·프로토콜 전반을 간결·명확화 — 동어반복(`(fast means fast)`), 모호 표현(`proved things`), 중복 절, 장황한 주의문 4곳 제거. 동작·가드레일·트리거 문구는 불변, 나머지 13개 파일은 이미 간결하여 무편집
 
