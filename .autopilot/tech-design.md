@@ -65,4 +65,4 @@
   오케스트레이터의 worktree/push/PR 소유권은 불변
 - Alternatives considered: 서브에이전트별 별도 worktree(머지 오버헤드 과대), 파일 잠금 없는
   자유 병렬(충돌 위험), 항상 fan-out(소형 피처에 낭비)
-- Decided by: user
+- Decided by: user (fan-out/fan-in 방향) / agent (임계값·서로소 소유권 세부 — PR #1 ⚠️ 섹션에 공개)

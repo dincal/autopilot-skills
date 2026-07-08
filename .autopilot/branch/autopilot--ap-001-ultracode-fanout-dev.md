@@ -3,8 +3,8 @@
 - created: 2026-07-08
 - base: main
 - features: AP-001
-- pr: -
-- status: in-progress   <!-- in-progress | in-review | merged | abandoned -->
+- pr: #1
+- status: in-review   <!-- in-progress | in-review | merged | abandoned -->
 
 ## Goal Prompt
 
@@ -46,6 +46,14 @@ SKILL.md 요약·README 영/한 반영, plugin.json 0.20.0, CHANGELOG, tech-desi
 
 ## Work Summary
 
-<!-- 개발 완료 후 기입 -->
+- feature-id: F-2026-07-08-a
+- tests: passing — 정적 검증 + 내용 단언 12건 전부 통과 (frontmatter YAML 13파일, JSON 6파일, bash -n 3스크립트, 내용 grep 단언 9건)
+- coverage: not measured — docs 전용 피처 (커버리지 도구 없음; 내용 단언으로 대체)
+- files-changed: loop-protocol.md(Phase C 항목 신설 + 도입부 조정), SKILL.md(요약), README.md/README.ko.md(ultracode 설명), plugin.json(0.20.0), CHANGELOG, tech-design, 본 문서
+- deviations-from-plan: 없음
+- how-to-verify: `git diff main...HEAD` 후 loop-protocol.md 울트라코드 섹션의 "Phase C development" 항목 확인; 정적 검증 배터리 재실행
 
 ## Review Log
+
+- code-review r1: APPROVE (blocking 0, notes 4 — 감사 메타 구분, single-feature 미적용 명시 제안, 프로세스 메타 기입, CHANGELOG 스타일 일관)
+- e2e r1: APPROVE (blocking 0, notes 2 — 미커밋 todo.md 정리 대상, 문서 언어 관례 일치)
