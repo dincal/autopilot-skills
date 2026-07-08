@@ -116,6 +116,17 @@
         }
       }
     },
+    "devRun": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "autoStart": {
+          "type": "boolean",
+          "default": true,
+          "description": "Start the managed dev server (as /autopilot-dev-run does) automatically at the beginning of an autopilot run, when the project is runnable and no dev-run is already alive. The merge/pull hook then keeps it serving freshly merged features."
+        }
+      }
+    },
     "git": {
       "type": "object",
       "additionalProperties": false,

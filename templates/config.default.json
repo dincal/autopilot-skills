@@ -32,6 +32,9 @@
       "url": null
     }
   },
+  "devRun": {
+    "autoStart": true
+  },
   "git": {
     "baseBranch": "main",
     "branchPrefix": "autopilot/",

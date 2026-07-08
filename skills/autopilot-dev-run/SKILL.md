@@ -11,6 +11,8 @@ Run the current project in dev mode as a managed background process. While it ru
 
 Manager script: `${CLAUDE_PLUGIN_ROOT}/hooks/scripts/dev-run.sh` (subcommands: `restart`, `stop`, `status`). State file: `.autopilot/dev-run.json` (gitignored).
 
+Note: the autopilot dev loop auto-starts this at run start when `devRun.autoStart` is true (default) and no dev-run is alive — auto-started entries carry `"startedBy": "autopilot"`. An already-running dev-run is never touched.
+
 ## Subcommand arguments
 
 If `$ARGUMENTS` is `stop`, `restart`, or `status`: run `dev-run.sh <subcommand>` and report the output. For `status`, also tail the last ~20 lines of the log if the process is not running (show the user why it died). Done.

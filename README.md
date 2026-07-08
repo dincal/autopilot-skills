@@ -81,6 +81,7 @@ Created by `/autopilot-init`; JSON Schema in [`templates/config.schema.json`](te
 | `review.reviewerModel` | `null` | Run review agents on a different model than the developer agent to decorrelate blind spots (e.g. `opus`); `null` inherits the session model |
 | `testing.requireTests` | `true` | Every feature must ship with tests (acceptance criteria + edge cases + error paths) |
 | `testing.coverage.target` | `80` | Minimum coverage (%) for changed code — feature agents keep adding tests until met when coverage is measurable (`testing.coverage.command`) |
+| `devRun.autoStart` | `true` | Auto-start the managed dev server at run start (when the project is runnable and none is alive) — merged features go live automatically |
 | `git.baseBranch` / `.branchPrefix` / `.mergeMethod` | `main` / `autopilot/` / `rebase` | Git/PR policy |
 | `language` | `ko` | Language of generated documents and PR bodies (code/commits/PR titles are always English) |
 

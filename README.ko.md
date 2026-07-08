@@ -94,6 +94,8 @@ goal.md 작성/수정을 위한 사용자 인터뷰. **goal.md를 바꿀 수 있
 
 한계: Claude Code 세션 밖에서 한 머지(GitHub 웹 UI 등)는 이 세션에서 pull이 일어나기 전까지 트리거되지 않습니다. 핫리로드 dev 서버는 로컬 파일 수정을 자체적으로 반영합니다.
 
+참고: 오토파일럿 런이 시작되면 이 커맨드를 직접 치지 않아도 **자동으로 기동**됩니다 (`devRun.autoStart`, 기본 true) — 단, 이미 dev-run이 살아 있으면 건드리지 않습니다. 런이 끝나도 서버는 계속 떠 있으며, 종료는 `/autopilot-dev-run stop`.
+
 ### `/autopilot-design [디자인 방향 힌트]`
 
 프로젝트의 **전체적인 룩앤필**을 다듬습니다. 디자인 도구는 **Claude Design 전용**입니다(Figma 등 다른 툴은 사용하지 않음).
@@ -222,6 +224,7 @@ Workflow 도구가 없는 세션이면 표준 프로토콜로 폴백합니다. `
 | `testing.coverage.target` | `80` | 변경 코드 최소 커버리지 % (null = 수치 게이트 없음) |
 | `testing.coverage.command` | `null` | 커버리지 측정 커맨드 (init이 자동 감지 시도) |
 | `testing.e2e.runCommand/readyCheck/url` | `null` | 앱 기동 커맨드 / 준비 확인 / 기본 URL |
+| `devRun.autoStart` | `true` | 오토파일럿 런 시작 시 dev 서버 자동 기동 (실행 가능한 프로젝트 + 이미 떠 있지 않을 때만) |
 | `git.baseBranch` | `main` | 런 브랜치의 fork 원점이자 런 PR의 대상 |
 | `git.branchPrefix` | `autopilot/` | 생성 브랜치 접두어 |
 | `git.mergeMethod` | `rebase` | rebase / squash / merge |
