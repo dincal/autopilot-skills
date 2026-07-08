@@ -10,6 +10,7 @@ This project is managed with the **autopilot** Claude Code plugin.
 - `/autopilot-todo [ideas]` — interview the user and add user-sourced items to `.autopilot/todo.md`.
 - `/autopilot-config [change]` — show and update `.autopilot/config.json` through an interview.
 - `/autopilot-project-review` — cold market-reaction review of the project; updates goal/todo via interview.
+- `/autopilot-design [hints]` — interview-driven look & feel refinement; maintains the design.md Style Guide.
 - `/autopilot-dev-run [stop|restart|status]` — run the dev server with automatic restarts on autopilot merges.
 - `/autopilot-sync` — reconcile all `.autopilot/` files and this section with the current state of the repository.
 - Saying **"develop with autopilot" / "오토파일럿으로 개발해"** starts the autonomous development loop (a skill, not a slash command).

@@ -34,7 +34,7 @@ For each pending item, verify against the actual code whether it is genuinely NO
 
 Append newly observable decisions since last sync as dated entries marked `Decided by: agent (observed from code)`, routed by type:
 
-- UI/UX changes (design system, components, layout/UX flows) → `design.md`
+- UI/UX changes (design system, components, layout/UX flows) → `design.md`'s `## Decisions` (NEVER rewrite its `## Style Guide` — that belongs to `/autopilot-design`)
 - Technical changes (frameworks, storage, architecture, data model) → `tech-design.md` (create from `${CLAUDE_PLUGIN_ROOT}/templates/tech-design.template.md` if missing)
 
 Append-only: never delete or rewrite existing entries. Exception — entries that historically landed in the wrong file may be MOVED once to the correct file, preserving their text and dates verbatim (note the move in the destination entry).
