@@ -7,6 +7,9 @@
 
 ## [Unreleased]
 
+## [0.23.6] - 2026-07-08
+- 스타일가이드/목업 무시 방지: 디자인 결정이 개발자에게 전달되도록 전 경로 명시 — Phase B 디자인 체크가 적용 Style Guide 규칙 + 승인 목업의 구체 스펙을 "이미지 없이 구현 가능한 바인딩 텍스트"로 Goal Prompt에 기록, FEATURE INPUT에 `## DESIGN` 섹션 추가, feature-dev 에이전트가 DESIGN·design.md Style Guide를 바인딩으로 취급(design.md 읽기 허용), e2e-tester가 러닝 UI의 승인 디자인 준수를 검증(중대 이탈 blocking, 픽셀 수준 note)
+
 ## [0.23.5] - 2026-07-08
 - 브랜치 문서 유실 방지: 피처 브랜치 생성 시(Phase C) 그 브랜치의 첫 커밋으로 브랜치 문서를 커밋하도록 변경 — 문서가 피처 브랜치와 함께 살며 PR·머지를 타고 run 브랜치에 도착. 이전엔 문서가 커밋 안 된 채(untracked) 방치돼 Phase E run 브랜치 pull/rebase 때 클로버·유실됐음. dev/review 갱신도 worktree의 피처 브랜치에서 커밋(에이전트 실행 사이에만), Phase E는 공용 문서(todo/CHANGELOG/CLAUDE 스냅샷)만 run 브랜치 커밋
 

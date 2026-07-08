@@ -116,3 +116,14 @@
 - Alternatives considered: run 브랜치에 생성 즉시 커밋(문서가 피처와 분리·머지로 안 옴, 사용자가
   피처 브랜치 소유 모델 선호), Phase E 일괄 커밋 유지(유실 창 존재 — 이번 사고의 원인)
 - Decided by: user
+
+### 2026-07-08 — 디자인 결정을 개발자에게 전파(스타일가이드/목업 무시 방지)
+- Context: feature-dev 에이전트가 GOAL PROMPT/PLAN만 받아 design.md·Style Guide·승인 목업을 못 보고
+  임의 스타일로 개발하는 사례. 목업은 시각물(Claude Design 렌더)이라 에이전트가 이미지 자체를 못 봄
+- Decision: 디자인 결정을 "이미지 없이 구현 가능한 텍스트 스펙"으로 만들어 전 경로에 전파 —
+  Phase B가 Style Guide 규칙+목업 스펙을 Goal Prompt 바인딩 제약으로 기록, FEATURE INPUT에 DESIGN
+  섹션 추가, feature-dev이 DESIGN+design.md Style Guide를 바인딩 취급(design.md 읽기 허용, 쓰기 금지),
+  e2e-tester가 러닝 UI 대비 준수 검증(중대 이탈=criterion-unmet blocking, 픽셀 수준=note)
+- Alternatives considered: 목업 링크만 전달(에이전트가 렌더를 못 봄), 리뷰에서만 잡기(개발이 이미
+  틀어진 뒤라 재작업 비용 큼), 스타일 준수를 무조건 blocking(anti-nitpick 화이트리스트와 충돌)
+- Decided by: user

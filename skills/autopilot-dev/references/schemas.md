@@ -105,6 +105,13 @@ The spawn prompt must be fully self-contained:
 ## PLAN
 <verbatim approved Plan>
 
+## DESIGN        <!-- present for user-facing features; omit for non-UI work -->
+Binding look & feel — build to THIS; departing from it is a defect, not a style choice.
+- Style Guide rules that apply (verbatim from design.md `## Style Guide`).
+- Approved mockup: <design.md `## Decisions` link> + source files at <paths>.
+- Concrete spec: layout, components, spacing/sizing, color & type tokens, interaction states, copy.
+- Read `design.md` `## Style Guide` in full before building UI.
+
 ## REVIEW FIXES        <!-- only present on fix-cycle re-spawns -->
 Fix ONLY these items, then re-run tests:
 1. <file:line> — <blocking issue>
