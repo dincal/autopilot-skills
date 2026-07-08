@@ -38,7 +38,7 @@ Detailed protocols live next to this file; read each when you reach the relevant
 Every loop-mode run works on its own RUN BRANCH (`<branchPrefix>run-<id>`, forked from `git.baseBranch` at run setup): features branch from it, feature PRs merge into it, and `git.baseBranch` is only ever touched by one final, gated run PR. Execute iterations per `references/loop-protocol.md`:
 
 - **A. Select** — refresh todo.md against goal.md (including actually running the app to find gaps), pick the next N features (N = `parallelFeatures`; merging small todos into one feature is encouraged, minimum user-story size).
-- **B. Plan** — per feature: frame any needed design and ask the user to decide, write a Goal Prompt, then an implementation Plan; pass the `approvals.goalPrompt` / `approvals.plan` gates; record both in the branch doc.
+- **B. Plan** — per feature: apply the design.md Style Guide first; for new design questions, let the USER decide over Claude Design mockups (unattended runs decide autonomously and sync the choice into Claude Design). Then write a Goal Prompt and an implementation Plan; pass the `approvals.goalPrompt` / `approvals.plan` gates; record both in the branch doc.
 - **C. Develop** — per feature: create branch + worktree, spawn a background `autopilot:feature-dev` agent; harvest WORK SUMMARY blocks as agents finish. In `single-feature` mode: create the feature branch but develop directly in this session (no worktree, no background agent) — tests included.
 - **D. Ship & Review** — push, `gh pr create` per feature; spawn `autopilot:code-reviewer` and `autopilot:e2e-tester` in parallel per PR; iterate fixes until both APPROVE (max `review.maxReviewIterations`, then escalate to the user).
 - **E. Merge & Close** — merge feature PRs into the run branch per `approvals.merge` (sequential; rebase remaining branches after each merge), update todo.md / CHANGELOG.md / branch docs / CLAUDE.md snapshot on the run branch, keep the run PR (run branch → base) current, remove worktrees.
@@ -78,3 +78,5 @@ The loop cannot end silently: a plugin Stop hook blocks your turn from ending wh
 - **Pause** (user interrupted or switched topics mid-run): set `run.phase: "paused"`, report the pause in one line; the next autopilot invocation's preflight offers Resume / Clean up / Fresh start.
 
 Never end a mid-run turn without one of these — if you have nothing queued, re-read state.json and continue from the recorded phase.
+
+The user can also conclude a run explicitly at any time with `/autopilot-stop` (settle features, finalize the run PR, merge on their approval) — if they ask to "stop and merge", point them there or follow that skill's protocol.

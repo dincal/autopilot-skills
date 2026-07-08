@@ -15,6 +15,7 @@ A Claude Code plugin for goal-driven autonomous development. You set the goal; a
 - Claude Code v2.1+
 - A git repository with a **GitHub remote** and an authenticated **`gh` CLI** (the dev loop creates and merges real PRs; it refuses to run without GitHub)
 - `python3` on PATH (used by the goal.md write-guard hook)
+- Recommended: the **Claude Design MCP** for `/autopilot-design` and in-loop design decisions — `claude mcp add --scope user --transport http claude-design https://api.anthropic.com/v1/design/mcp`, then `/design-login` (Pro/Max/Team/Enterprise)
 - Recommended for web projects: a browser MCP server (chrome-devtools or playwright) so the E2E agent can drive the UI; without one it degrades to HTTP-level checks
 
 ## Install
@@ -41,8 +42,9 @@ claude --plugin-dir /path/to/autopilot-skills
 | `/autopilot-todo [ideas]` | Interview you about features you want and add them to `todo.md` as user-sourced items (top selection rank) |
 | `/autopilot-config [change]` | Show current settings and update `config.json` through an interview (validated against the schema) |
 | `/autopilot-project-review` | Coldly assess how the market would react to launching this project (no cheerleading — base rates, competitors, ranked risks), then update `goal.md`/`todo.md` through an interview |
-| `/autopilot-design [hints]` | Audit the current look & feel, interview you into a concrete design direction (using Claude Design/mockup tooling when available), and write it as `design.md`'s living Style Guide — enforced on every future UI feature's Goal Prompt |
+| `/autopilot-design [hints]` | Audit the current look & feel, interview you, then iterate real mockups in **Claude Design** (project created/reused automatically) until you approve them; only then writes `design.md`'s living Style Guide — enforced on every future UI feature's Goal Prompt |
 | `/autopilot-dev-run [stop\|restart\|status]` | Run the project's dev server as a managed background process — a `PostToolUse` hook restarts it automatically after every `gh pr merge` / `git pull` in a session, so merged autopilot features are always live |
+| `/autopilot-stop` | Conclude the current run: settle in-flight features (merge/park/abandon, your call), finalize the run PR into the base branch, and merge it once you approve |
 | `/autopilot-sync` | Reconcile every autopilot file with the current repo reality (code, git history, merged PRs) |
 | Say **"develop with autopilot"** / **"오토파일럿으로 개발해"** | Start the autonomous dev loop (a skill, not a slash command) |
 
