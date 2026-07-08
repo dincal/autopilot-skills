@@ -1,5 +1,7 @@
 # Autopilot
 
+> 한국어 사용설명서: [README.ko.md](README.ko.md)
+
 A Claude Code plugin for goal-driven autonomous development. You set the goal; autopilot keeps the project's living documents in sync and runs a develop → review → merge loop until the goal is met or you say stop.
 
 - Maintains `CLAUDE.md` and a `.autopilot/` document set (goal, design, todo, per-branch docs, changelog) as the project's source of truth
