@@ -223,7 +223,7 @@ Workflow 도구가 없는 세션이면 표준 프로토콜로 폴백합니다. `
 | `testing.e2e.runCommand/readyCheck/url` | `null` | 앱 기동 커맨드 / 준비 확인 / 기본 URL |
 | `git.baseBranch` | `main` | 런 브랜치의 fork 원점이자 런 PR의 대상 |
 | `git.branchPrefix` | `autopilot/` | 생성 브랜치 접두어 |
-| `git.mergeMethod` | `squash` | squash / merge / rebase |
+| `git.mergeMethod` | `rebase` | rebase / squash / merge |
 | `git.deleteBranchAfterMerge` | `true` | 머지 후 브랜치 삭제 |
 | `git.worktreeRoot` | `null` | worktree 위치 (null = `../<repo>__autopilot/`) |
 | `loop.maxIterations` | `0` | 이터레이션 상한 (0 = 무한) |

@@ -35,7 +35,7 @@
   "git": {
     "baseBranch": "main",
     "branchPrefix": "autopilot/",
-    "mergeMethod": "squash",
+    "mergeMethod": "rebase",
     "deleteBranchAfterMerge": true,
     "worktreeRoot": null
   },

@@ -122,7 +122,7 @@
       "properties": {
         "baseBranch": { "type": "string", "default": "main", "description": "Branch that feature branches fork from and PRs target." },
         "branchPrefix": { "type": "string", "default": "autopilot/", "description": "Prefix for autopilot-created branches." },
-        "mergeMethod": { "type": "string", "enum": ["squash", "merge", "rebase"], "default": "squash" },
+        "mergeMethod": { "type": "string", "enum": ["squash", "merge", "rebase"], "default": "rebase" },
         "deleteBranchAfterMerge": { "type": "boolean", "default": true },
         "worktreeRoot": {
           "type": ["string", "null"],
