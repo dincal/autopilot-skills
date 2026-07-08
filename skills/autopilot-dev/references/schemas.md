@@ -16,7 +16,16 @@ Rewritten atomically (full file) at every phase transition.
     "fastMode": false,
     "iteration": 3,
     "phase": "developing",
-    "startedAt": "<ISO8601>"
+    "startedAt": "<ISO8601>",
+    "agentTask": "<task/workflow id(s) of RUN-LEVEL background work in flight — gap-analysis workflow, planning explores; null when none>"
+  },
+  "goalHash": "<sha256 of goal.md content — invalidates the criteria ledger when goals change>",
+  "criteria": {
+    "<short-slug-of-criterion>": {
+      "status": "met | unmet | unknown",
+      "verifiedAt": "<commit sha>",
+      "evidence": "<one line: how it was verified>"
+    }
   },
   "worktreeRoot": "/abs/path/<repoName>__autopilot",
   "features": [
@@ -36,7 +45,8 @@ Rewritten atomically (full file) at every phase transition.
 ```
 
 - `run.phase`: `idle | paused | selecting | planning | developing | reviewing | merging | docs` — `idle`: no run / run finished; `paused`: run suspended mid-flight (resumable). A plugin Stop hook blocks the orchestrator from ending its turn while the phase is anything else, so phase transitions are what legitimately stop the loop.
-- `features[].agentTask` discipline: SET it when spawning background work for the feature (feature-dev agent, reviewers) and CLEAR it (null) as soon as the results are harvested. While any feature has a non-null `agentTask`, the Stop hook permits ending the turn — that is the legitimate "waiting for background agents" state, and the harness re-invokes on task completion.
+- `agentTask` discipline (feature-level `features[].agentTask` AND run-level `run.agentTask`): SET it when spawning background work (feature-dev agents, reviewers → the feature's field; gap-analysis workflows, planning explores → the run's field) and CLEAR it (null) as soon as the results are harvested. While either is non-null, the Stop hook permits ending the turn — that is the legitimate "waiting for background agents" state, and the harness re-invokes on task completion.
+- `criteria` ledger discipline: one entry per Success Criterion / done-when condition (stable slug). Phase E marks criteria `met` from merged features' E2E evidence; Phase A trusts `met` entries and re-examines only `unmet`/`unknown`; a `goalHash` mismatch (goal.md edited) invalidates the whole ledger; declaring goal-met requires all-`met` PLUS a final full confirmation scan.
 - `features[].status`: `planned | developing | dev-done | in-review | changes-requested | approved | merged | failed | abandoned`
 
 ## todo.md item

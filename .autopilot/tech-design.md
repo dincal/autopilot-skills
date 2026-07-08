@@ -84,3 +84,13 @@
   크래시는 태스크 종료 통지로 즉시 인지, 세션 종료 시 서버도 정리
 - Alternatives considered: detached 유지(가시성·정리 열세), 훅 직접 재시작(세션 태스크에 불가)
 - Decided by: user
+
+### 2026-07-08 — 증분 갭 분석: 기준 원장(criteria ledger)
+- Context: 루프가 몇 번 돈 세션에서 매 이터레이션 전 기준 앱 재검증은 낭비 (울트라코드는 팬아웃까지)
+- Decision: state.json에 기준별 {status, verifiedAt, evidence} 원장 + goalHash 무효화. Phase E가
+  머지된 피처의 E2E 리뷰 증거를 원장에 접어 넣고, Phase A는 unmet/unknown만 점검(FULL 스캔은
+  원장 부재·goal 변경·종료 확인 패스에만). 종료 판정은 전부-met + 최종 확인 스캔으로 엄격함 유지.
+  런 레벨 대기는 run.agentTask로 기록해 Stop 훅이 인정
+- Alternatives considered: 매회 FULL 스캔(낭비), 검증 생략(goal-met 오판 위험), 이터레이션 카운트
+  기반 주기 스캔(변경량과 무관)
+- Decided by: user (증분화 방향) / agent (원장 설계)

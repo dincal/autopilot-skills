@@ -7,6 +7,10 @@
 
 ## [Unreleased]
 
+## [0.23.0] - 2026-07-08
+- 증분 갭 분석: 기준 원장(state.criteria)이 검증 결과를 축적 — Phase E가 E2E 리뷰 증거를 접어 넣고, Phase A는 unmet/unknown 기준만 점검 (FULL 스캔은 원장 부재·goal 변경·종료 확인 패스에만). 울트라코드 갭 파인더도 필요 기준에만 스폰
+- 런 레벨 대기 필드 run.agentTask 추가 — 갭 분석 워크플로우 등 피처 밖 백그라운드 작업 대기를 Stop 훅이 인정
+
 ## [0.22.0] - 2026-07-08
 - dev-run을 세션 background shell로 전환: 세션 태스크 가시화, 크래시 종료 통지, 세션 종료 시 자동 정리. 머지/pull 시 훅이 재시작 지시를 additionalContext로 주입하고 클로드가 즉시 수행 (dev-run.sh는 kill/stop/status/hook로 재편)
 

@@ -15,11 +15,12 @@ Loop mode only — single-feature mode works directly against `git.baseBranch` w
 ## Phase A — Select (`phase: selecting`)
 
 1. Read `goal.md` and `todo.md` in full.
-2. **Gap analysis against reality** (this is more than transcribing user input):
-   - Start the app using `testing.e2e.runCommand` (auto-detect if null; skip gracefully for libraries with no runnable surface and use the test suite + public API instead).
-   - Walk goal.md's Success Criteria and each Short-Term Goal's "done when" condition against observed behavior.
-   - For every unmet condition with no covering todo item, draft a new todo item (`source: agent`, schema in `schemas.md`, IDs continue the AP-### sequence).
+2. **Gap analysis — incremental by default.** The criteria ledger (`state.json.criteria`, schema in `schemas.md`) is the memory: per Success Criterion / done-when condition it records `met|unmet|unknown`, the verifying commit, and one-line evidence. Don't re-verify what the ledger already proves.
+   - **FULL scan** (start the app — `testing.e2e.runCommand`, auto-detect if null, test suite + public API for libraries — and walk EVERY criterion) only when: the ledger is missing or `state.goalHash` no longer matches goal.md's content hash (goals changed → rebuild the ledger), or every criterion reads `met` and you are about to declare goal-met (final confirmation pass).
+   - **INCREMENTAL scan** (every other iteration): do NOT re-drive the whole app. The previous iteration already proved things — Phase E folded each merged feature's E2E evidence into the ledger. Examine ONLY criteria that are `unmet`/`unknown` AND lack a covering todo, with point checks (against the running dev-run server where available) instead of full walks.
+   - Either way: for every unmet condition with no covering todo item, draft a new todo item (`source: agent`, schema in `schemas.md`, IDs continue the AP-### sequence).
    - Gate: if `approvals.newTodos` is `ask`, present the drafted items (AskUserQuestion, multiSelect) and add only accepted ones; `auto` → add them all. Update todo.md.
+   - If you run gap analysis via background agents or a workflow, record the task/workflow ids in `state.json.run.agentTask` before ending the turn (run-level counterpart of `features[].agentTask` — the Stop hook honors it) and clear it when you harvest.
 3. **Pick N features** (N = `parallelFeatures`; in `single-feature` mode N = 1 and, if the user named the feature, use that):
    - Order strictly: `source: user` first (all user items before any agent item) → priority (P0 highest) → lowest ID. Respect `depends-on`: an item whose dependency is unmerged is not eligible.
    - Composition rule: one feature = one full dev cycle, minimum one user story. MERGE tightly-coupled or too-small todos into a single feature; SPLIT anything too big to land as one reviewable PR.
@@ -65,6 +66,7 @@ Per feature as it finishes development:
 2. Merge SEQUENTIALLY: `gh pr merge <n> --<git.mergeMethod>` (add `--delete-branch` if `git.deleteBranchAfterMerge`). After each merge, for every remaining unmerged feature branch: fetch, rebase onto the updated run branch in its worktree, rerun the test suite, force-push (`--force-with-lease`). Rebase conflicts → spawn a feature-dev fix run in that worktree; if tests still fail, escalate to the user.
 3. Per merged feature (`phase: docs`):
    - Remove its todo items from todo.md.
+   - **Fold review evidence into the criteria ledger**: the E2E reviewer verified this feature's acceptance criteria against the running app — mark the Success Criteria / done-when conditions those criteria satisfy as `met` in `state.json.criteria` (verifiedAt = merge commit, evidence = one line from the review). This is what lets the next Phase A skip re-verification.
    - Append CHANGELOG `[Unreleased]` entries: `- <description> (<AP-ids>, PR #<n>)`.
    - Branch doc: already pre-marked `status: merged` at PR creation — no status change here; the next `/autopilot-sync` archives it.
    - If the project file structure changed, refresh the CLAUDE.md managed section snapshot (between the AUTOPILOT markers only).
@@ -83,7 +85,7 @@ Per feature as it finishes development:
    - the user asked to stop or pause;
    - `loop.maxIterations` > 0 and the count is reached (0 means infinite);
    - `stopOnFailure` is true and a feature failed this iteration;
-   - the goal is met — a HIGH bar: EVERY Success Criterion in goal.md verified against the actually-running app during Phase A, with per-criterion evidence listed in the final report. Any criterion unverified or ambiguous → the goal is NOT met; generate the next gap todos and continue.
+   - the goal is met — a HIGH bar: the criteria ledger reads `met` for EVERY criterion AND the final full confirmation pass (Phase A FULL scan against the actually-running app) re-verified them this iteration, with per-criterion evidence listed in the final report. Any criterion unverified or ambiguous → the goal is NOT met; generate the next gap todos and continue.
 4. `single-feature` mode: always stop after Phase E, with `run.phase: "idle"`.
 
 ## Run end (any stop reason: user stop, limits, failure, goal met)
@@ -101,7 +103,7 @@ Per feature as it finishes development:
 
 When enabled and the Workflow tool exists in the session, upgrade these phases. Worktree lifecycle, pushes, PRs, merges, and state remain orchestrator-owned exactly as specified above — workflows never push, merge, or write `.autopilot/` files:
 
-- **Phase A gap analysis** → one workflow: parallel finder agents, one per Success Criterion / Short-Term Goal (each runs or inspects the app against its criterion), then a dedup stage that merges overlapping gaps before todo drafting. Replaces the single-pass gap analysis.
+- **Phase A gap analysis** → one workflow: parallel finder agents — one per criterion that NEEDS verification per the ledger (`unmet`/`unknown`, or all of them during a FULL scan) — then a dedup stage that merges overlapping gaps before todo drafting. If no criterion needs verification, skip the workflow entirely. Record the workflow id in `run.agentTask` while it runs.
 - **Phase B planning (per feature)** → one workflow: 2–3 independent plan drafts from different angles (e.g. minimal-change, clean-architecture, test-first), a judge stage that scores them against the Goal Prompt, and a synthesis of the winner grafting the runners-up's best ideas. The synthesized plan still passes the `approvals.plan` gate as usual.
 - **Phase C development (per feature)** → author the workflow yourself: whatever orchestration builds this feature fastest and most correctly (fan-out/fan-in, pipeline, judge panel — or a single agent when that's optimal). Hard constraints only:
     1. Work only inside the feature's worktree.
