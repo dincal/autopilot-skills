@@ -38,8 +38,8 @@ From each finished agent, parse the trailing fenced `WORK SUMMARY` block (contra
 
 ## Cleanup
 
-- Normal path (after merge): `git worktree remove <path>` then `git worktree prune`; delete the local branch if `git.deleteBranchAfterMerge`.
-- Abandoned/failed features: same removal; keep the branch doc with final status for the audit trail; return todos to `pending`.
+- Normal path (after merge): `git worktree remove <path>` then `git worktree prune`; delete the local branch if `git.deleteBranchAfterMerge` (the remote branch is deleted by `gh pr merge --delete-branch` / the repo's delete-branch-on-merge setting).
+- Abandoned/failed features: same removal; keep the branch doc with final status for the audit trail; return todos to `pending`. If the branch was pushed, delete the REMOTE branch too (`git push origin --delete <branch>`) — except for parked features and "keep the branch" choices, which intentionally leave the branch and PR for a human.
 - If removal fails due to stray untracked files, use `git worktree remove --force` — but only for paths registered in state.json.
 - Preflight of every run: reconcile `git worktree list` against state.json; worktrees under the worktree root that no live feature owns are orphans — offer removal to the user.
 

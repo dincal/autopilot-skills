@@ -64,6 +64,7 @@
 - **개요 인자**: 저장소 인자 뒤의 나머지 텍스트. 없으면 README/코드에서 도출하고, 그것도 안 되면 직접 물어봅니다(지어내지 않음)
 - goal.md가 없으면 골 인터뷰를 인라인으로 진행 (동의 게이트 포함)
 - `.gitignore`에 런타임 파일(state.json, logs/, .goal-consent, .stop-guard) 등록
+- GitHub 저장소의 **"머지된 PR 브랜치 자동 삭제"** 설정을 켬 (`delete_branch_on_merge`) — 리모트에 피처/런 브랜치가 쌓이지 않도록. 권한이 없으면 경고 후 루프의 `--delete-branch` 플래그에 의존
 
 ### `/autopilot-goal [대략적인 지침]`
 

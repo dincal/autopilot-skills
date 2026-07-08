@@ -92,5 +92,6 @@ Create only what is missing, from `${CLAUDE_PLUGIN_ROOT}/templates/`:
    .autopilot/.stop-guard
    .autopilot/dev-run.json
    ```
-2. Print a summary: every file created/updated/skipped, warnings (e.g. missing GitHub remote), and next steps — `/autopilot-goal` if goal.md is missing, then "develop with autopilot" to start the loop.
-3. Suggest committing the new files (do not commit unless asked). If a GitHub repository was newly created in Step 1 and nothing has been pushed yet, include pushing (`git push -u origin <branch>`) in the suggestion.
+2. GitHub branch hygiene: if origin is a GitHub repo, enable automatic deletion of merged PR head branches — `gh api -X PATCH repos/<owner>/<repo> -F delete_branch_on_merge=true` — so remote feature/run branches don't pile up. If the call fails (insufficient permission), warn and note that branch cleanup then relies on the loop's `--delete-branch` flags.
+3. Print a summary: every file created/updated/skipped, warnings (e.g. missing GitHub remote), and next steps — `/autopilot-goal` if goal.md is missing, then "develop with autopilot" to start the loop.
+4. Suggest committing the new files (do not commit unless asked). If a GitHub repository was newly created in Step 1 and nothing has been pushed yet, include pushing (`git push -u origin <branch>`) in the suggestion.

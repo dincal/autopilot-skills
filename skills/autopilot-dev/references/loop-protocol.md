@@ -91,6 +91,7 @@ Per feature as it finishes development:
 2. Apply the `approvals.runMerge` gate for merging the run branch into `git.baseBranch`:
    - `ask` → AskUserQuestion: Merge now / Leave the run PR open for later.
    - `auto` → `gh pr merge <run pr> --<git.mergeMethod>`.
+   - Either merge path adds `--delete-branch` when `git.deleteBranchAfterMerge` is true, so the run branch is removed locally and on origin after merging.
    - **Unattended: NEVER merge into the base branch** regardless of the setting — leave the run PR open with a closing comment summarizing the run; the user merges when ready.
 3. If the run merged zero features: open no run PR and delete the run branch (local and origin).
 4. Restore the main checkout to `state.json.run.previousBranch` and restore any preflight stash. Set `run.phase: "idle"`.

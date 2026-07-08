@@ -49,6 +49,7 @@ Append-only: never delete or rewrite existing entries. Exception — entries tha
 - Update docs for live branches (status, PR number, work summary from commits).
 - Branches merged or deleted: set final status and move their doc to `branch/archive/`.
 - Current branch missing a doc: create one from `${CLAUDE_PLUGIN_ROOT}/templates/branch.template.md`.
+- **Remote branch hygiene**: list origin branches under `git.branchPrefix` whose PRs are merged or closed (cross-check `gh pr list --state merged` / `--state closed`); present them (AskUserQuestion, multiSelect) and delete accepted ones with `git push origin --delete <branch>`. Never touch branches with open PRs or parked features.
 
 ## Step 7 — CLAUDE.md
 
