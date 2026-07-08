@@ -7,7 +7,7 @@ A Claude Code plugin for goal-driven autonomous development. You set the goal; a
 - Maintains `CLAUDE.md` and a `.autopilot/` document set (goal, design, todo, per-branch docs, changelog) as the project's source of truth
 - Develops **N features in parallel**, each in its own git worktree with a background agent
 - Ships **one PR per feature**, reviewed by a dedicated code-review agent and an E2E-test agent that actually runs the app
-- Approve-biased reviews: blocks only for real defects, never for nitpicks
+- Neutral, evidence-based reviews: substantiated defects block, nitpicks never do — reviewing to reject is forbidden
 - Approval gates (goal prompt / plan / merge) configurable between `ask` and `auto`
 
 ## Requirements

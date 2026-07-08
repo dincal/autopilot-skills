@@ -1,6 +1,6 @@
 # Review Protocol — per-PR review orchestration
 
-Reviews exist to catch REAL problems, not to gatekeep. The system is approve-biased by design: a PR without genuine defects must get approved and merged. You (the orchestrator) enforce that bias structurally.
+Reviews exist to catch REAL problems, not to gatekeep. Review is NEUTRAL and evidence-based: a substantiated defect blocks regardless of how much work it invalidates; an unsubstantiated concern never blocks. Reviewing for the sake of rejection is forbidden — a PR without substantiated defects must get approved and merged. You (the orchestrator) enforce this standard structurally.
 
 ## Round structure
 
