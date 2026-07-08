@@ -70,7 +70,7 @@ Per feature as it finishes development:
    - If the project file structure changed, refresh the CLAUDE.md managed section snapshot (between the AUTOPILOT markers only).
    - Remove the worktree (`git worktree remove <path>`, then `git worktree prune`).
 4. Commit the `.autopilot/` doc updates on the RUN branch (pull it first — the feature merges happened on GitHub) with message `chore(autopilot): close iteration <k>`, and push. Single-feature mode: commit them on the feature branch before the PR instead.
-   - If a dev-run is active (`.autopilot/dev-run.json` exists), the plugin's PostToolUse hook restarts the dev server automatically after your merge/pull commands — do not manage it yourself; just mention the restart in the iteration report.
+   - If a dev-run is active (`.autopilot/dev-run.json` exists), the plugin's PostToolUse hook injects a restart instruction after your merge/pull commands — execute it right then (`dev-run.sh kill` → new session background shell → update dev-run.json) and mention the restart in the iteration report.
 5. Run PR: after the first feature merge of the run, open the run PR — `gh pr create --base <git.baseBranch> --head <run branch>` — with the body per the "Run PR body" schema in `schemas.md`. The run PR then STAYS OPEN and grows across iterations (keep its body current with `gh pr edit`); it is finalized and gated only at run end, and its existence never justifies stopping the loop.
 
 ## Loop continuation

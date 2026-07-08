@@ -88,9 +88,9 @@ goal.md 작성/수정을 위한 사용자 인터뷰. **goal.md를 바꿀 수 있
 
 ### `/autopilot-dev-run [stop | restart | status]`
 
-현재 프로젝트를 **dev 모드로 실행**하는 관리형 백그라운드 프로세스를 띄웁니다 (커맨드는 `testing.e2e.runCommand` 또는 자동 감지, 로그는 `.autopilot/logs/dev-run.log`).
+현재 프로젝트를 **세션 background shell**로 dev 모드 실행합니다 (커맨드는 `testing.e2e.runCommand` 또는 자동 감지). 세션 태스크라서 태스크 목록에 보이고, **서버가 죽으면 종료 통지로 클로드가 즉시 인지**해 로그를 확인·재시작하며, 세션이 끝나면 함께 정리되어 고아 프로세스가 남지 않습니다.
 
-핵심은 **자동 재실행 보장**: 플러그인의 PostToolUse 훅이 세션에서 `gh pr merge` 또는 `git pull`이 성공할 때마다 dev 프로세스를 자동 재시작합니다(10초 디바운스). 오토파일럿 런 중 메인 체크아웃은 런 브랜치에 있으므로, **기능이 머지될 때마다 dev 서버가 새 코드로 다시 뜹니다** — 프롬프트가 아니라 훅이 보장하므로 잊어버릴 수 없습니다.
+**자동 재실행 보장**: 플러그인의 PostToolUse 훅이 세션에서 `gh pr merge` 또는 `git pull`이 성공할 때마다 재시작 지시를 컨텍스트에 결정적으로 주입하고(10초 디바운스), 클로드가 그 자리에서 재시작합니다(kill → 새 background shell → 상태 갱신). 오토파일럿 런 중 메인 체크아웃은 런 브랜치에 있으므로, **기능이 머지될 때마다 dev 서버가 새 코드로 다시 뜹니다**.
 
 한계: Claude Code 세션 밖에서 한 머지(GitHub 웹 UI 등)는 이 세션에서 pull이 일어나기 전까지 트리거되지 않습니다. 핫리로드 dev 서버는 로컬 파일 수정을 자체적으로 반영합니다.
 
@@ -249,7 +249,7 @@ Workflow 도구가 없는 세션이면 표준 프로토콜로 폴백합니다. `
 | `state.json` | X | 런타임 상태 (phase, 기능 상태, 재개 정보) |
 | `logs/` | X | 런별 오케스트레이션 로그 |
 | `.goal-consent`, `.stop-guard` | X | 훅용 일회성 토큰 / 루프 유지 카운터 |
-| `dev-run.json` | X | `/autopilot-dev-run` 프로세스 상태 (커맨드, pid, 자동 재시작) |
+| `dev-run.json` | X | `/autopilot-dev-run` 상태 (커맨드, pid, 세션 태스크 id, 자동 재시작) |
 
 todo 항목 형식:
 

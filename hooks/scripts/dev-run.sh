@@ -1,16 +1,23 @@
 #!/usr/bin/env bash
 # Manage the autopilot dev-run process (config: .autopilot/dev-run.json).
 #
-# Subcommands:
-#   restart — (re)start the dev process from dev-run.json (kills the old tree)
-#   stop    — kill the dev process tree and remove dev-run.json
-#   status  — print liveness, command, url, log path
-#   hook    — PostToolUse(Bash) entry point: reads the tool input from stdin
-#             and kicks off a detached, asynchronous restart after merge/pull
-#             commands (`gh pr merge`, `git pull`), debounced to one restart
-#             per 10s. The hook itself returns immediately.
+# The dev server runs as a SESSION BACKGROUND SHELL (Bash tool with
+# run_in_background: true), started by Claude per the autopilot-dev-run
+# skill — visible as a session task, exit notifications re-invoke Claude,
+# and it dies with the session (no orphans). This script supports it:
 #
-# dev-run.json: { "command", "url", "logFile", "autoRestart", "pid", "lastRestart" }
+#   kill    — kill the recorded server process tree, KEEP dev-run.json
+#             (used right before Claude starts a fresh background shell)
+#   stop    — kill the tree and remove dev-run.json
+#   status  — print liveness, command, url, task id
+#   hook    — PostToolUse(Bash) entry point: after merge/pull commands
+#             (`gh pr merge`, `git pull`), inject an additionalContext
+#             reminder telling Claude to restart the dev server now
+#             (debounced to one signal per 10s). The hook never blocks
+#             and never manages the process itself.
+#
+# dev-run.json: { "command", "url", "taskId", "pid", "autoRestart",
+#                 "lastRestart", "startedBy" }
 set -euo pipefail
 
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$PWD}"
@@ -42,49 +49,41 @@ try: d=json.load(sys.stdin)
 except Exception: sys.exit(0)
 print((d.get("tool_input") or {}).get("command") or "")' 2>/dev/null || true)"
     printf '%s' "$BASHCMD" | grep -qE 'gh pr merge|git pull' || exit 0
+    # Ignore this script's own invocations to avoid signal loops.
+    printf '%s' "$BASHCMD" | grep -q 'dev-run.sh' && exit 0
     LAST="$(json_get lastRestart)"; NOW="$(date +%s)"
     if [ -n "$LAST" ] && [ "$LAST" -eq "$LAST" ] 2>/dev/null && [ $((NOW - LAST)) -lt 10 ]; then
       exit 0
     fi
-    # The PostToolUse runner waits for the hook's output pipes to close; the
-    # hook must never be tied to the dev server's lifetime. Restart in a fully
-    # detached background process and return immediately.
-    HOOKLOG="$(json_get logFile)"
-    [ -n "$HOOKLOG" ] || HOOKLOG="$PROJECT_DIR/.autopilot/logs/dev-run.log"
-    mkdir -p "$(dirname "$HOOKLOG")"; touch "$HOOKLOG"
-    ( "$0" restart < /dev/null >> "$HOOKLOG" 2>&1 & )
+    # Stamp the debounce at signal time so sequential merges emit one reminder.
+    python3 - "$CONF" <<'PY' 2>/dev/null || true
+import json, sys, time
+d = json.load(open(sys.argv[1])); d["lastRestart"] = int(time.time())
+json.dump(d, open(sys.argv[1], "w"), indent=2)
+PY
+    RUNCMD="$(json_get command)"; URL="$(json_get url)"
+    python3 - "$0" "$RUNCMD" "$URL" <<'PY'
+import json, sys
+script, cmd, url = sys.argv[1], sys.argv[2], sys.argv[3]
+ctx = (
+    "autopilot dev-run: a merge/pull just landed and autoRestart is enabled. "
+    "Restart the dev server NOW, before continuing other work: "
+    f"(1) run `{script} kill` to stop the old process tree; "
+    "(2) start a NEW session background shell (Bash tool, run_in_background: true) with the command: "
+    f"`echo DEVRUN_PID=$$ && exec {cmd}`; "
+    "(3) update .autopilot/dev-run.json: pid (from the DEVRUN_PID line in the task output), taskId (from the spawn result), lastRestart (epoch now); "
+    + (f"(4) verify readiness by polling {url}. " if url else "(4) verify readiness via the task output. ")
+    + "Then continue what you were doing and mention the restart in your report."
+)
+print(json.dumps({"hookSpecificOutput": {"hookEventName": "PostToolUse", "additionalContext": ctx}}))
+PY
     exit 0
     ;;
 
-  restart)
-    [ -f "$CONF" ] || { echo "no dev-run.json — start with /autopilot-dev-run" >&2; exit 1; }
-    have_py || { echo "python3 required" >&2; exit 1; }
-    RUNCMD="$(json_get command)"
-    LOG="$(json_get logFile)"
+  kill)
+    [ -f "$CONF" ] || { echo "dev-run is not configured"; exit 0; }
     OLDPID="$(json_get pid)"
-    [ -n "$RUNCMD" ] || { echo "dev-run.json has no command" >&2; exit 1; }
-    [ -n "$LOG" ] || LOG="$PROJECT_DIR/.autopilot/logs/dev-run.log"
-    if alive "$OLDPID"; then kill_tree "$OLDPID"; sleep 1; fi
-    # touch matters: some user shells set noclobber, so >> cannot create files
-    mkdir -p "$(dirname "$LOG")"; touch "$LOG"
-    printf '\n===== dev-run (re)start %s =====\n' "$(date '+%F %T')" >> "$LOG"
-    # Spawn with no wrapper subshell and every stdio detached from this script:
-    # a lingering parent inheriting this script's stdout pipe would keep it
-    # open for the server's lifetime and hang whoever reads it (hook runner,
-    # command substitution). NEWPID is the real `bash -c` server process, so
-    # kill_tree still reaches all of its children.
-    cd "$PROJECT_DIR"
-    nohup bash -c "$RUNCMD" < /dev/null >> "$LOG" 2>&1 &
-    NEWPID=$!
-    python3 - "$CONF" "$NEWPID" <<'PY'
-import json, sys, time
-path, pid = sys.argv[1], int(sys.argv[2])
-d = json.load(open(path))
-d["pid"] = pid
-d["lastRestart"] = int(time.time())
-json.dump(d, open(path, "w"), indent=2)
-PY
-    echo "dev-run started (pid $NEWPID, log: $LOG)"
+    if alive "$OLDPID"; then kill_tree "$OLDPID"; echo "dev-run process tree killed (pid $OLDPID); config kept"; else echo "dev-run process not running; config kept"; fi
     ;;
 
   stop)
@@ -101,11 +100,11 @@ PY
     echo "dev-run: $STATE"
     echo "command: $(json_get command)"
     echo "url:     $(json_get url)"
-    echo "log:     $(json_get logFile)"
+    echo "task:    $(json_get taskId)"
     ;;
 
   *)
-    echo "usage: dev-run.sh {restart|stop|status|hook}" >&2
+    echo "usage: dev-run.sh {kill|stop|status|hook}" >&2
     exit 1
     ;;
 esac

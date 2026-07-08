@@ -43,7 +43,7 @@ claude --plugin-dir /path/to/autopilot-skills
 | `/autopilot-config [change]` | Show current settings and update `config.json` through an interview (validated against the schema) |
 | `/autopilot-project-review` | Coldly assess how the market would react to launching this project (no cheerleading — base rates, competitors, ranked risks), then update `goal.md`/`todo.md` through an interview |
 | `/autopilot-design [hints]` | Audit the current look & feel, interview you, then iterate real mockups in **Claude Design** (project created/reused automatically) until you approve them; only then writes `design.md`'s living Style Guide — enforced on every future UI feature's Goal Prompt |
-| `/autopilot-dev-run [stop\|restart\|status]` | Run the project's dev server as a managed background process — a `PostToolUse` hook restarts it automatically after every `gh pr merge` / `git pull` in a session, so merged autopilot features are always live |
+| `/autopilot-dev-run [stop\|restart\|status]` | Run the project's dev server as a **session background shell** (visible task, crash notifications, dies with the session) — a `PostToolUse` hook injects a restart instruction after every `gh pr merge` / `git pull`, so merged autopilot features are always live |
 | `/autopilot-stop` | Conclude the current run: settle in-flight features (merge/park/abandon, your call), finalize the run PR into the base branch, and merge it once you approve |
 | `/autopilot-sync` | Reconcile every autopilot file with the current repo reality (code, git history, merged PRs) |
 | Say **"develop with autopilot"** / **"오토파일럿으로 개발해"** | Start the autonomous dev loop (a skill, not a slash command) |

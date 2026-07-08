@@ -7,6 +7,9 @@
 
 ## [Unreleased]
 
+## [0.22.0] - 2026-07-08
+- dev-run을 세션 background shell로 전환: 세션 태스크 가시화, 크래시 종료 통지, 세션 종료 시 자동 정리. 머지/pull 시 훅이 재시작 지시를 additionalContext로 주입하고 클로드가 즉시 수행 (dev-run.sh는 kill/stop/status/hook로 재편)
+
 ## [0.21.0] - 2026-07-08
 - dev-run 훅 행 수정: 서버 완전 분리 기동 + 훅의 비동기 재시작 즉시 반환 (AP-003)
 - 승인 게이트 가시성: 초안을 branch 문서에 선작성하고 게이트 질문 preview에 전문 임베드 — 모든 ask 게이트 적용 (AP-002)

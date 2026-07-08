@@ -75,3 +75,12 @@
   충돌 마커 없이 쓰기가 유실되므로 fan-in이 복구할 수 없음
 - Alternatives considered: 고정 임계값 레시피(유연성 부족), 무제약 동일 트리 병렬(쓰기 유실)
 - Decided by: user
+
+### 2026-07-08 — dev-run 실행 모델: detached 프로세스 → 세션 background shell
+- Context: detached 고아 프로세스는 크래시를 아무도 인지 못 하고 세션 종료 후에도 잔존
+- Decision: dev 서버를 Bash run_in_background 세션 태스크로 실행 (`echo DEVRUN_PID=$$ && exec <cmd>`
+  — 셸 pid가 곧 서버). 훅은 프로세스를 직접 관리하지 않고 merge/pull 시 additionalContext로
+  재시작 지시를 주입 → 훅은 항상 턴 중에 발화하므로 클로드가 그 자리에서 수행 (타이밍 동등).
+  크래시는 태스크 종료 통지로 즉시 인지, 세션 종료 시 서버도 정리
+- Alternatives considered: detached 유지(가시성·정리 열세), 훅 직접 재시작(세션 태스크에 불가)
+- Decided by: user
