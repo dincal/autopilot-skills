@@ -46,8 +46,8 @@ Append-only: never delete or rewrite existing entries. Exception — entries tha
 
 ## Step 6 — branch/*.md
 
-- Update docs for live branches (status, PR number, work summary from commits).
-- Branches merged or deleted: set final status and move their doc to `branch/archive/`.
+- A feature's branch doc lives on ITS feature branch (committed at branch creation) and reaches this checkout only when the feature merges — so sync sees merged features' docs here, not live/unmerged ones. Do not recreate a live feature's doc in this checkout; if a live branch needs a doc fix, make it on that branch. Reconcile only what merged in: correct status, PR number, and work-summary drift from the merged commits.
+- Merged features (their doc arrived here via the merge, incl. merged-then-deleted branches): set final status and move the doc to `branch/archive/`. A never-merged/abandoned branch has no doc in this checkout to archive — it lives on that branch / its closed PR.
 - Current branch missing a doc: create one from `${CLAUDE_PLUGIN_ROOT}/templates/branch.template.md`.
 - **Remote branch hygiene**: list origin branches under `git.branchPrefix` whose PRs are merged or closed (cross-check `gh pr list --state merged` / `--state closed`); present them (AskUserQuestion, multiSelect) and delete accepted ones with `git push origin --delete <branch>`. Never touch branches with open PRs or parked features.
 

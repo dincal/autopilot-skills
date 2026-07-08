@@ -39,12 +39,12 @@ From each finished agent, parse the trailing fenced `WORK SUMMARY` block (contra
 ## Cleanup
 
 - Normal path (after merge): `git worktree remove <path>` then `git worktree prune`; delete the local branch if `git.deleteBranchAfterMerge` (the remote branch is deleted by `gh pr merge --delete-branch` / the repo's delete-branch-on-merge setting).
-- Abandoned/failed features: same removal; keep the branch doc with final status for the audit trail; return todos to `pending`. If the branch was pushed, delete the REMOTE branch too (`git push origin --delete <branch>`) — except for parked features and "keep the branch" choices, which intentionally leave the branch and PR for a human.
+- Abandoned/failed features: same worktree removal; return todos to `pending`. The branch doc lives on the feature branch (and in its PR if one was opened), not on the run branch — that is its audit trail. Commit its final status (`abandoned`) on the feature branch before removing the worktree. If the branch was pushed, deleting the REMOTE branch (`git push origin --delete <branch>`) also removes that git copy of the doc — the closed PR still retains it; keep the branch if you want the doc preserved in git. Parked features and "keep the branch" choices intentionally leave the branch and PR (and thus the doc) for a human.
 - If removal fails due to stray untracked files, use `git worktree remove --force` — but only for paths registered in state.json.
 - Preflight of every run: reconcile `git worktree list` against state.json; worktrees under the worktree root that no live feature owns are orphans — offer removal to the user.
 
 ## Concurrency cautions
 
-- All `.autopilot/` doc writes (todo.md, state.json, branch docs, CHANGELOG) happen ONLY in the main checkout by you, the orchestrator — never by feature agents. This is what prevents write races; do not violate it.
+- Shared `.autopilot/` files (todo.md, state.json, CHANGELOG) are written ONLY in the main checkout by you, the orchestrator — never by feature agents. This prevents write races on shared state; do not violate it. The one exception is a feature's OWN branch doc (`branch/<its-branch>.md`), which lives on its feature branch: you commit it inside that feature's worktree — but ONLY between agent runs (at branch creation, before the dev agent spawns; and after an agent returns), never while an agent is working that worktree, and the feature agent itself never touches it.
 - Feature agents never push and never touch `gh` — pushing and PR creation stay with the orchestrator, in one place.
 - Dependencies between concurrent features are a planning error; if you discover one mid-flight, finish the independent one, merge it, then rebase the dependent one before its review.

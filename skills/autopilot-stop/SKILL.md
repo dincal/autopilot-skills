@@ -24,12 +24,12 @@ Read `.autopilot/state.json` and `.autopilot/config.json`.
    - `approved` (reviewed, not yet merged) → recommend **Merge into the run branch now**; alternatives: Park (leave PR open; the branch doc keeps its pre-marked `merged` status until the PR's fate is known) / Abandon (close PR, correct the branch doc's pre-marked `merged` status to `abandoned`, todos → `pending`).
    - `in-review` / `changes-requested` → **Park** (leave the PR open with a status comment; the branch doc keeps its pre-marked `merged` status until the PR's fate is known — `/autopilot-sync` corrects it later; todos → `blocked` referencing the PR) or **Abandon** (close the PR; correct the branch doc's pre-marked `merged` status to `abandoned`; todos → `pending` with a note).
    - `developing` / `dev-done` (no PR yet) → **Abandon** (todos → `pending`) or **Keep the branch** (commit & push what exists in the worktree, leave the branch for manual follow-up; todos → `blocked`).
-3. Apply the choices: merge approved PRs sequentially into the run branch (rebase remaining ones after each, as in the loop's Phase E), post parking comments, close abandoned PRs, update todo.md statuses and branch-doc statuses per the pre-marking rule above (abandoned → corrected to `abandoned`; parked → pre-mark kept).
+3. Apply the choices: merge approved PRs sequentially into the run branch (rebase remaining ones after each, as in the loop's Phase E — the merge brings that feature's branch doc onto the run branch), post parking comments, close abandoned PRs, and update todo.md statuses. Correct each NON-merged feature's branch-doc status per the pre-marking rule (abandoned → `abandoned`; parked → pre-mark kept) ON THAT FEATURE'S BRANCH — its doc lives there, so commit the change in the feature's worktree and push (updating the PR) BEFORE the worktree is removed in step 4.
 4. Remove the worktrees of all settled features; `git worktree prune`.
 
 ## Step 3 — Finalize run docs
 
-On the run branch (pull first): make sure merged features are reflected in todo.md (items removed) and CHANGELOG.md (`[Unreleased]` entries), branch docs carry final statuses, and commit any resulting `.autopilot/` updates (`chore(autopilot): conclude run <id>`), then push.
+On the run branch (pull first — this also brings merged features' branch docs onto it): make sure merged features are reflected in todo.md (items removed) and CHANGELOG.md (`[Unreleased]` entries) and that their branch docs read `merged`, then commit the resulting shared `.autopilot/` updates (`chore(autopilot): conclude run <id>`) and push. Non-merged features' branch docs were already finalized on their own branches in step 3.
 
 ## Step 4 — Run PR
 

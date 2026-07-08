@@ -105,3 +105,14 @@
   run.agentTask(런 레벨 대기)는 원장과 무관한 Stop 훅 픽스라 유지
 - Alternatives considered: run.agentTask까지 제거(대기 bounce 버그 재발·울트라코드 워크플로 대기 불가)
 - Decided by: user
+
+### 2026-07-08 — 브랜치 문서를 피처 브랜치에 커밋(생성 시점)
+- Context: 실런에서 브랜치 문서 4개가 커밋 안 된 채(untracked) 방치되다 Phase E run 브랜치
+  pull/rebase 때 클로버·유실 (audit trail은 PR 본문에만 남아 겨우 보존)
+- Decision: 브랜치 문서는 그 피처 브랜치 소유 — Phase C에서 피처 브랜치 생성 시 첫 커밋으로
+  worktree에 커밋(에이전트 스폰 전), dev/review 갱신도 worktree의 피처 브랜치에서 커밋(에이전트
+  실행 사이에만). 문서는 피처 PR을 타고 머지로 run 브랜치에 도착 → 리뷰어가 PR에서 문서를 봄.
+  공용 파일(todo/state/CHANGELOG)만 main checkout(run 브랜치) 단독 쓰기 유지, 피처 자기 문서만 예외
+- Alternatives considered: run 브랜치에 생성 즉시 커밋(문서가 피처와 분리·머지로 안 옴, 사용자가
+  피처 브랜치 소유 모델 선호), Phase E 일괄 커밋 유지(유실 창 존재 — 이번 사고의 원인)
+- Decided by: user

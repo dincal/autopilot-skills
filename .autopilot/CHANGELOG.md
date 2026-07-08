@@ -7,6 +7,9 @@
 
 ## [Unreleased]
 
+## [0.23.5] - 2026-07-08
+- 브랜치 문서 유실 방지: 피처 브랜치 생성 시(Phase C) 그 브랜치의 첫 커밋으로 브랜치 문서를 커밋하도록 변경 — 문서가 피처 브랜치와 함께 살며 PR·머지를 타고 run 브랜치에 도착. 이전엔 문서가 커밋 안 된 채(untracked) 방치돼 Phase E run 브랜치 pull/rebase 때 클로버·유실됐음. dev/review 갱신도 worktree의 피처 브랜치에서 커밋(에이전트 실행 사이에만), Phase E는 공용 문서(todo/CHANGELOG/CLAUDE 스냅샷)만 run 브랜치 커밋
+
 ## [0.23.4] - 2026-07-08
 - 증분 갭 분석(기준 원장) 철회: 매 phase마다 state.json에 criteria/goalHash를 누적하던 방식이 과함 — `criteria`/`goalHash` 스키마 삭제, FULL/INCREMENTAL 스캔 구분·Phase E 증거 접기 제거. Phase A는 goal.md와 현재 프로젝트 상태를 참고해 todo를 고르거나 새로 작성하는 단순 갭 분석으로 환원, goal-met은 원장 없는 high bar로 복귀 (run.agentTask 런 레벨 대기는 유지)
 
