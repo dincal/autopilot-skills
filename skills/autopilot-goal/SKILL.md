@@ -37,13 +37,13 @@ Render the complete goal.md following `${CLAUDE_PLUGIN_ROOT}/templates/goal.temp
 - **Success Criteria** must be measurable/observable — the dev loop runs the app against these.
 - Every **Short-Term Goal** ends with `— done when: <observable condition>`.
 - Append to `## History`: `- <YYYY-MM-DD>: <one-line summary of this change>, approved by user` (get the date with `date +%F`).
-- Show the COMPLETE draft to the user in your reply — never ask for approval of a document the user hasn't seen in full.
+- Show the COMPLETE draft to the user in your reply — never ask for approval of a document the user hasn't seen in full. Chat text may not be rendered to the user, so the Step 4 consent question must ALSO carry the full draft in its Approve option's preview.
 
 ## Step 4 — Consent gate (mandatory)
 
 Ask via AskUserQuestion: "Write this draft to .autopilot/goal.md?" with options:
 
-- **Approve** — write the file as shown.
+- **Approve** — write the file as shown. Embed the COMPLETE draft in this option's preview — the user must see exactly what they approve inside the question UI, not only in chat text above it (which may not render).
 - **Edit first** — collect the requested changes, update the draft, show it again, re-ask.
 - **Cancel** — stop. Write nothing, leave any existing goal.md untouched.
 

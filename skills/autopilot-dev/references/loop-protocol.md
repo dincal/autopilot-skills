@@ -30,16 +30,17 @@ Loop mode only — single-feature mode works directly against `git.baseBranch` w
 
 For each selected feature:
 
-1. **Design check**: for any user-facing feature, FIRST consult `design.md`'s `## Style Guide` — when it answers the question, apply it WITHOUT asking, and copy the relevant rules into the feature's Goal Prompt constraints. For genuinely new design questions the guide doesn't answer, design tooling is **Claude Design ONLY** (the claude-design MCP; never other design tools):
+1. **Branch doc first (consent artifact)**: at the START of Phase B, before any gate, create `branch/<sanitized>.md` from the branch template (`/` in branch names → `--` in filenames). Every draft the user is asked to approve is written into this file BEFORE the gate fires. Reason, stated explicitly: assistant chat text between tool calls may not be rendered to the user — the user must never be asked to approve something they cannot see. The file is the durable source of truth; each gate additionally embeds the draft inside the question itself (see the gates below).
+2. **Design check**: for any user-facing feature, FIRST consult `design.md`'s `## Style Guide` — when it answers the question, apply it WITHOUT asking, and copy the relevant rules into the feature's Goal Prompt constraints. For genuinely new design questions the guide doesn't answer, design tooling is **Claude Design ONLY** (the claude-design MCP; never other design tools):
    - **Attended**: produce 2–3 mockup candidates in the project's Claude Design project (reuse the id recorded in design.md; `create_project` if none) with `write_files` + `render_preview`, and let the USER decide via AskUserQuestion (pick one / request changes / decide without mockups). Apply requested changes and re-ask; the user's choice is final. Record it in `design.md` `## Decisions` with the mockup link.
    - **Unattended**: decide yourself (your recommended option) AND keep Claude Design in sync — write the chosen design into the Claude Design project (`write_files` + `render_preview`) so the user can review what was designed later; record in `## Decisions` as `Decided by: agent (unattended run)` with the mockup link, and surface it in the PR's autonomous-decisions section and the run report.
    - claude-design MCP unavailable → attended: 2–3 text options with a recommendation (AskUserQuestion); unattended: decide and record in `## Decisions` only, noting the missing MCP.
    Route non-UI decisions as before: development/architecture → `tech-design.md`. Never rewrite the Style Guide from the loop — that belongs to `/autopilot-design`. If the project has no Style Guide yet and the iteration is UI-heavy, suggest `/autopilot-design` in the iteration report (but do not block on it).
-2. **Goal Prompt** — a one-page brief: Objective, User story, Acceptance criteria (observable; copied/refined from the todo items), Constraints, Out of scope.
-   - Gate `approvals.goalPrompt = ask`: show the full text, ask per feature — Approve / Edit (revise and re-ask) / Drop this feature (todo back to `pending`) / Stop autopilot.
-3. **Implementation Plan** — explore the codebase and write: approach, files to touch, reusable existing utilities, test plan (which tests prove which acceptance criteria), risks. With N > 1, delegate exploration to parallel read-only Explore agents to protect your own context.
-   - Gate `approvals.plan = ask`: same options as above.
-4. Write the approved Goal Prompt and Plan into `branch/<sanitized>.md` (create from the branch template; `/` in branch names → `--` in filenames).
+3. **Goal Prompt** — a one-page brief: Objective, User story, Acceptance criteria (observable; copied/refined from the todo items), Constraints, Out of scope. Write the DRAFT into the branch doc's `## Goal Prompt` section BEFORE gating.
+   - Gate `approvals.goalPrompt = ask`: ask per feature with AskUserQuestion — the question text MUST name the branch doc path, and the Approve option's `preview` field MUST embed the full draft text (the file is the durable source of truth; the preview is the in-question copy). Options: Approve / Edit (revise and re-ask) / Drop this feature (todo back to `pending`) / Stop autopilot.
+4. **Implementation Plan** — explore the codebase and write: approach, files to touch, reusable existing utilities, test plan (which tests prove which acceptance criteria), risks. With N > 1, delegate exploration to parallel read-only Explore agents to protect your own context. Write the DRAFT into the branch doc's `## Plan` section BEFORE gating.
+   - Gate `approvals.plan = ask`: same mechanics and option set as the goalPrompt gate — branch doc path named in the question text, full draft embedded in the Approve option's `preview`.
+5. **Gate outcomes** (both gates): **Approve** → the draft already in the branch doc IS the approved version; no separate write step. **Edit** → update the branch doc in place, then re-ask. **Drop this feature** → return its todos to `pending`; delete the branch doc if nothing was developed yet, otherwise set its `status: abandoned`. **Stop autopilot** → run end protocol.
 
 ## Phase C — Develop (`phase: developing`)
 
@@ -55,7 +56,7 @@ Per feature as it finishes development:
 
 1. Update any project docs the feature affects (README usage, API docs) inside the worktree; commit.
 2. Push: `git -C <worktree> push -u origin <branch>`.
-3. Create the PR: `gh pr create --base <run branch> --head <branch>` (single-feature mode: `--base <git.baseBranch>`) — title in English (conventional style), body in `config.language` following the **PR body schema in `schemas.md`**: it MUST lead with the highlighted "decisions made without user approval" section (compiled from auto-passed gates, agent design decisions, WORK SUMMARY autonomous-decisions/deviations, arbitration overrides), followed by the work summary, then acceptance-criteria checklist and test evidence. Record the PR number in state.json and the branch doc.
+3. Create the PR: `gh pr create --base <run branch> --head <branch>` (single-feature mode: `--base <git.baseBranch>`) — title in English (conventional style), body in `config.language` following the **PR body schema in `schemas.md`**: it MUST lead with the highlighted "decisions made without user approval" section (compiled from auto-passed gates, agent design decisions, WORK SUMMARY autonomous-decisions/deviations, arbitration overrides), followed by the work summary, then acceptance-criteria checklist and test evidence. Record the PR number in state.json and the branch doc. When the PR is created, set the branch doc's `status: merged` (pre-marked: in this flow approval leads to merge; live review progress is tracked in `state.json` `features[].status`, not the doc). If the PR is later closed without merging, correct the doc to `status: abandoned`.
 4. Run the review cycle per `review-protocol.md` until both reviewers APPROVE, the iteration cap escalates to the user, or the feature is abandoned.
 
 ## Phase E — Merge & Close (`phase: merging` → `docs`)
@@ -65,7 +66,7 @@ Per feature as it finishes development:
 3. Per merged feature (`phase: docs`):
    - Remove its todo items from todo.md.
    - Append CHANGELOG `[Unreleased]` entries: `- <description> (<AP-ids>, PR #<n>)`.
-   - Branch doc: `status: merged` (next `/autopilot-sync` archives it).
+   - Branch doc: already pre-marked `status: merged` at PR creation — no status change here; the next `/autopilot-sync` archives it.
    - If the project file structure changed, refresh the CLAUDE.md managed section snapshot (between the AUTOPILOT markers only).
    - Remove the worktree (`git worktree remove <path>`, then `git worktree prune`).
 4. Commit the `.autopilot/` doc updates on the RUN branch (pull it first — the feature merges happened on GitHub) with message `chore(autopilot): close iteration <k>`, and push. Single-feature mode: commit them on the feature branch before the PR instead.
@@ -102,11 +103,13 @@ When enabled and the Workflow tool exists in the session, upgrade these phases. 
 
 - **Phase A gap analysis** → one workflow: parallel finder agents, one per Success Criterion / Short-Term Goal (each runs or inspects the app against its criterion), then a dedup stage that merges overlapping gaps before todo drafting. Replaces the single-pass gap analysis.
 - **Phase B planning (per feature)** → one workflow: 2–3 independent plan drafts from different angles (e.g. minimal-change, clean-architecture, test-first), a judge stage that scores them against the Goal Prompt, and a synthesis of the winner grafting the runners-up's best ideas. The synthesized plan still passes the `approvals.plan` gate as usual.
-- **Phase C development (per feature)** → when the approved Plan decomposes into **3 or more largely independent sub-tasks**, replace the single feature-dev spawn with one fan-out/fan-in workflow running INSIDE that feature's worktree; below the threshold keep the standard single agent — it is cheaper and carries no partition overhead.
-  - **Fan-out by file ownership**: derive DISJOINT file sets per sub-task from the Plan. Each implementation agent owns exactly its set, works in the SAME feature worktree, and writes tests for its own slice. No two agents may touch the same file; shared surfaces (types/interfaces, config, test wiring) are off-limits during the parallel stage.
-  - **Fan-in integration stage**: one agent then reconciles interfaces and shared files, wires the slices together, runs the FULL test suite plus coverage against `testing.coverage.target`, and fixes cross-cutting breakage. Suite-level green is the integration stage's responsibility.
-  - **Failure**: if integration cannot reach green tests, the feature is `failed` per the normal Phase C rule — never ship a partial fan-out result.
-  - **Contracts unchanged**: the workflow's final synthesis emits the same fenced WORK SUMMARY (aggregating sub-agent reports, coverage, and autonomous-decisions), and the orchestrator still creates the worktree, harvests the summary, pushes, and opens the PR.
+- **Phase C development (per feature)** → author the workflow yourself: whatever orchestration builds this feature fastest and most correctly (fan-out/fan-in, pipeline, judge panel — or a single agent when that's optimal). Hard constraints only:
+    1. Work only inside the feature's worktree.
+    2. Same-tree parallel writers need disjoint file ownership; overlapping scopes only via per-agent isolated branches, merged (conflicts resolved) at fan-in.
+    3. Done = full suite green + `testing.coverage.target`; can't reach green → feature `failed`, no partial ships.
+    4. Final synthesis emits the standard WORK SUMMARY.
+    5. No push, no `gh`, no `.autopilot/` writes — worktree/push/PR stay with the orchestrator.
+    6. Workflow tool missing or the workflow fails → standard single agent, logged.
 - **Phase D code review (per PR)** → one workflow replacing the single code-reviewer agent: dimension finders (correctness, security, tests/coverage, acceptance-criteria) fan out over the PR diff, then EVERY candidate blocking item is adversarially verified by 2–3 independent skeptic agents prompted to refute it — only items surviving majority verification become BLOCKING (whitelist rules still apply; unverified items become NOTES). The e2e-tester agent still runs separately as specified. `review.reviewerModel` applies to workflow review agents too.
 
 Rules: `fastMode` overrides ultracode for Phase D (skip the review workflow, use the standard critical-only reviewer). If a workflow fails or the Workflow tool is unavailable, fall back to the standard protocol for that phase and log it. Log each workflow run (phase, agent count) in the run log; iteration reports mention ultracode usage.

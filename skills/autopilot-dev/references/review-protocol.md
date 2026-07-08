@@ -31,10 +31,10 @@ After `review.maxReviewIterations` rounds without dual approval, STOP iterating 
 
 - **Merge anyway** — record the override in the Review Log, proceed to merge.
 - **Keep iterating** — one more batch of rounds (same cap again).
-- **Abandon feature** — close the PR (`gh pr close`), branch doc `status: abandoned`, todos back to `pending` with a note.
+- **Abandon feature** — close the PR (`gh pr close`); the branch doc was pre-marked `merged` at PR creation, so correct its status to `abandoned`; todos back to `pending` with a note.
 - **Pause autopilot** — leave the PR open, write state, stop the run cleanly.
 
-**Unattended (`unattended: true`)**: do not ask — PARK the feature instead. Leave the PR open, post a `gh pr comment` (in `config.language`) summarizing the unresolved blocking items and that it needs human review, set feature status `abandoned`, set its todos to `blocked` with a note referencing the PR, and continue the loop with the other features. Never "merge anyway" without a human.
+**Unattended (`unattended: true`)**: do not ask — PARK the feature instead. Leave the PR open, post a `gh pr comment` (in `config.language`) summarizing the unresolved blocking items and that it needs human review, set feature status `abandoned`, set its todos to `blocked` with a note referencing the PR, and continue the loop with the other features. The parked PR stays open, so its branch doc keeps the pre-marked `merged` status until the PR's fate is resolved (`/autopilot-sync` corrects it to `abandoned` only if the PR is later closed unmerged). Never "merge anyway" without a human.
 
 ## Anti-nitpick guardrails (enforced by YOU)
 

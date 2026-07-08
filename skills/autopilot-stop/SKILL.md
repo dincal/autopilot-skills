@@ -21,10 +21,10 @@ Read `.autopilot/state.json` and `.autopilot/config.json`.
 1. Stop any still-running background feature agents recorded in `features[].agentTask`.
 2. Then settle each feature by status — ask the user ONCE (AskUserQuestion, one question per unfinished feature, batched) rather than deciding silently:
    - `merged` → nothing to do.
-   - `approved` (reviewed, not yet merged) → recommend **Merge into the run branch now**; alternatives: Park (leave PR open) / Abandon (close PR, todos → `pending`).
-   - `in-review` / `changes-requested` → **Park** (leave the PR open with a status comment; todos → `blocked` referencing the PR) or **Abandon** (close the PR; todos → `pending` with a note).
+   - `approved` (reviewed, not yet merged) → recommend **Merge into the run branch now**; alternatives: Park (leave PR open; the branch doc keeps its pre-marked `merged` status until the PR's fate is known) / Abandon (close PR, correct the branch doc's pre-marked `merged` status to `abandoned`, todos → `pending`).
+   - `in-review` / `changes-requested` → **Park** (leave the PR open with a status comment; the branch doc keeps its pre-marked `merged` status until the PR's fate is known — `/autopilot-sync` corrects it later; todos → `blocked` referencing the PR) or **Abandon** (close the PR; correct the branch doc's pre-marked `merged` status to `abandoned`; todos → `pending` with a note).
    - `developing` / `dev-done` (no PR yet) → **Abandon** (todos → `pending`) or **Keep the branch** (commit & push what exists in the worktree, leave the branch for manual follow-up; todos → `blocked`).
-3. Apply the choices: merge approved PRs sequentially into the run branch (rebase remaining ones after each, as in the loop's Phase E), post parking comments, close abandoned PRs, update todo.md statuses and branch-doc final statuses.
+3. Apply the choices: merge approved PRs sequentially into the run branch (rebase remaining ones after each, as in the loop's Phase E), post parking comments, close abandoned PRs, update todo.md statuses and branch-doc statuses per the pre-marking rule above (abandoned → corrected to `abandoned`; parked → pre-mark kept).
 4. Remove the worktrees of all settled features; `git worktree prune`.
 
 ## Step 3 — Finalize run docs
@@ -38,7 +38,7 @@ On the run branch (pull first): make sure merged features are reflected in todo.
 
 ## Step 5 — User approval gate, then merge
 
-Show the run PR link and a one-paragraph summary, then AskUserQuestion:
+Show the run PR link and a one-paragraph summary, then AskUserQuestion — embed that summary plus the merged-feature list in the **Merge now** option's preview (chat text above the question may not render; the user must see what they are merging inside the question UI):
 
 - **Merge now** → `gh pr merge <run pr> --<git.mergeMethod>` (add `--delete-branch` per `git.deleteBranchAfterMerge`), then update the local base branch (`git pull` after switching in Step 6).
 - **Leave the PR open** → keep it for later review; nothing merges.

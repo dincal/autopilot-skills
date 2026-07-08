@@ -4,16 +4,19 @@
 - base: {{BASE_BRANCH}}
 - features: {{FEATURE_IDS}}
 - pr: {{PR_NUMBER}}
-- status: in-progress   <!-- in-progress | in-review | merged | abandoned -->
+- status: in-progress   <!-- in-progress | merged | abandoned — merged is pre-marked at PR creation; live review progress lives in state.json -->
 
 ## Goal Prompt
 
-<!-- The approved Goal Prompt, verbatim: objective, user story, acceptance
-     criteria, constraints, out-of-scope. -->
+<!-- The Goal Prompt: objective, user story, acceptance criteria, constraints,
+     out-of-scope. The DRAFT is written here BEFORE the goalPrompt approval
+     gate; on approval it becomes the approved version as-is. -->
 
 ## Plan
 
-<!-- The approved implementation plan: approach, files to touch, test plan. -->
+<!-- The implementation plan: approach, files to touch, test plan. The DRAFT
+     is written here BEFORE the plan approval gate; on approval it becomes the
+     approved version as-is. -->
 
 ## Autonomous Decisions
 

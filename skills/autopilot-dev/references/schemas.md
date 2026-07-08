@@ -181,7 +181,7 @@ NOTES:
 
 ## branch/<sanitized>.md
 
-Branch `autopilot/ap-012-price-filter` → file `autopilot--ap-012-price-filter.md` (every `/` → `--`). Sections: metadata list (created/base/features/pr/status), `## Goal Prompt`, `## Plan`, `## Autonomous Decisions` (mirrors the PR body's top section), `## Work Summary`, `## Review Log`. Status: `in-progress | in-review | merged | abandoned`. Serves as the PR body source and audit trail; archived to `branch/archive/` after merge by `/autopilot-sync`.
+Branch `autopilot/ap-012-price-filter` → file `autopilot--ap-012-price-filter.md` (every `/` → `--`). Sections: metadata list (created/base/features/pr/status), `## Goal Prompt`, `## Plan`, `## Autonomous Decisions` (mirrors the PR body's top section), `## Work Summary`, `## Review Log`. Status: `in-progress | merged | abandoned` — `merged` is PRE-MARKED at PR creation (in this flow approval implies merge; live progress lives in `state.json` `features[].status`); a PR closed without merging gets corrected to `abandoned`. The doc doubles as the CONSENT ARTIFACT: the draft Goal Prompt and Plan land here BEFORE the approval gates, so the user always approves a durable, readable file. Serves as the PR body source and audit trail; archived to `branch/archive/` after merge by `/autopilot-sync`.
 
 ## CHANGELOG.md entry
 

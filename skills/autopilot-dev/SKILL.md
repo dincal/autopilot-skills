@@ -56,10 +56,11 @@ Rewrite `.autopilot/state.json` at every phase transition (schema in `references
 - Reviews follow `references/review-protocol.md`: neutral and evidence-based — blocking only for substantiated defects, never reviewing to reject. You act only on BLOCKING items, never on NOTES.
 - At every phase boundary, check whether the user has asked to stop or pause; if so, finish writing state.json and stop cleanly.
 - When gates are `auto`, do not invent extra per-iteration confirmation questions — that defeats loop mode. Keep the user informed with concise progress updates instead.
+- Anything a gate asks the user to approve must be written to its durable file FIRST (Goal Prompt/Plan → the branch doc; config changes → the config diff; etc.) and the FULL text embedded in the AskUserQuestion option's preview — never rely on chat text above the question, which may not be rendered to the user.
 
 ## Ultracode orchestration (`ultracode: true`)
 
-The user's explicit autopilot trigger combined with this setting is their standing opt-in to multi-agent Workflow orchestration for this run. When enabled AND the Workflow tool is available in the session, upgrade the phases per the "Ultracode orchestration" section of `references/loop-protocol.md` (fan-out gap analysis, multi-plan judging, fan-out/fan-in development for large multi-file features, adversarially verified review). When the Workflow tool is unavailable, fall back to the standard protocol and note that in the run log. `fastMode` overrides ultracode for the review phase (fast means fast). Expect significantly higher token cost — that is the point of the setting.
+The user's explicit autopilot trigger combined with this setting is their standing opt-in to multi-agent Workflow orchestration for this run. When enabled AND the Workflow tool is available in the session, upgrade the phases per the "Ultracode orchestration" section of `references/loop-protocol.md` (fan-out gap analysis, multi-plan judging, dynamically authored development workflows — you design the optimal orchestration per feature under hard safety constraints, adversarially verified review). When the Workflow tool is unavailable, fall back to the standard protocol and note that in the run log. `fastMode` overrides ultracode for the review phase (fast means fast). Expect significantly higher token cost — that is the point of the setting.
 
 ## Unattended mode (`unattended: true`)
 

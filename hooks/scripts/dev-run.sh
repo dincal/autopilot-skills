@@ -6,8 +6,9 @@
 #   stop    — kill the dev process tree and remove dev-run.json
 #   status  — print liveness, command, url, log path
 #   hook    — PostToolUse(Bash) entry point: reads the tool input from stdin
-#             and restarts the dev process after merge/pull commands
-#             (`gh pr merge`, `git pull`), debounced to one restart per 10s.
+#             and kicks off a detached, asynchronous restart after merge/pull
+#             commands (`gh pr merge`, `git pull`), debounced to one restart
+#             per 10s. The hook itself returns immediately.
 #
 # dev-run.json: { "command", "url", "logFile", "autoRestart", "pid", "lastRestart" }
 set -euo pipefail
@@ -45,7 +46,14 @@ print((d.get("tool_input") or {}).get("command") or "")' 2>/dev/null || true)"
     if [ -n "$LAST" ] && [ "$LAST" -eq "$LAST" ] 2>/dev/null && [ $((NOW - LAST)) -lt 10 ]; then
       exit 0
     fi
-    exec "$0" restart
+    # The PostToolUse runner waits for the hook's output pipes to close; the
+    # hook must never be tied to the dev server's lifetime. Restart in a fully
+    # detached background process and return immediately.
+    HOOKLOG="$(json_get logFile)"
+    [ -n "$HOOKLOG" ] || HOOKLOG="$PROJECT_DIR/.autopilot/logs/dev-run.log"
+    mkdir -p "$(dirname "$HOOKLOG")"; touch "$HOOKLOG"
+    ( "$0" restart < /dev/null >> "$HOOKLOG" 2>&1 & )
+    exit 0
     ;;
 
   restart)
@@ -57,10 +65,17 @@ print((d.get("tool_input") or {}).get("command") or "")' 2>/dev/null || true)"
     [ -n "$RUNCMD" ] || { echo "dev-run.json has no command" >&2; exit 1; }
     [ -n "$LOG" ] || LOG="$PROJECT_DIR/.autopilot/logs/dev-run.log"
     if alive "$OLDPID"; then kill_tree "$OLDPID"; sleep 1; fi
-    mkdir -p "$(dirname "$LOG")"
+    # touch matters: some user shells set noclobber, so >> cannot create files
+    mkdir -p "$(dirname "$LOG")"; touch "$LOG"
     printf '\n===== dev-run (re)start %s =====\n' "$(date '+%F %T')" >> "$LOG"
-    ( cd "$PROJECT_DIR" && nohup bash -c "$RUNCMD" >> "$LOG" 2>&1 & echo $! > "$CONF.pid.tmp" )
-    NEWPID="$(cat "$CONF.pid.tmp")"; rm -f "$CONF.pid.tmp"
+    # Spawn with no wrapper subshell and every stdio detached from this script:
+    # a lingering parent inheriting this script's stdout pipe would keep it
+    # open for the server's lifetime and hang whoever reads it (hook runner,
+    # command substitution). NEWPID is the real `bash -c` server process, so
+    # kill_tree still reaches all of its children.
+    cd "$PROJECT_DIR"
+    nohup bash -c "$RUNCMD" < /dev/null >> "$LOG" 2>&1 &
+    NEWPID=$!
     python3 - "$CONF" "$NEWPID" <<'PY'
 import json, sys, time
 path, pid = sys.argv[1], int(sys.argv[2])

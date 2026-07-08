@@ -29,7 +29,7 @@ User's change request (may be empty): $ARGUMENTS
 
 1. Build the updated config: change ONLY the keys the user chose; preserve everything else verbatim (including keys you didn't touch).
 2. Validate against the schema: types, enums (`mode`, gates, `mergeMethod`), ranges (`parallelFeatures` 1–4, `maxReviewIterations` ≥ 1, `maxIterations` ≥ 0). Reject invalid values with an explanation and re-ask instead of silently clamping.
-3. Show a before → after diff of exactly the changed keys and confirm via AskUserQuestion (Apply / Adjust / Cancel). On Cancel, write nothing.
+3. Show a before → after diff of exactly the changed keys and confirm via AskUserQuestion (Apply / Adjust / Cancel). Embed the full diff in the Apply option's preview — chat text above the question may not be rendered, so the user must see the exact diff inside the question UI, not only as chat text. On Cancel, write nothing.
 
 ## Step 4 — Write and follow up
 
