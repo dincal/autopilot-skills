@@ -14,7 +14,8 @@
 
 ## Plan
 
-<!-- The implementation plan: approach, files to touch, test plan. The DRAFT
+<!-- A short brief, same weight as the Goal Prompt: approach, boundaries,
+     test plan, risks — no file lists or function-level edits. The DRAFT
      is written here BEFORE the plan approval gate; on approval it becomes the
      approved version as-is. -->
 

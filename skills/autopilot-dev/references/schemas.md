@@ -79,6 +79,21 @@ Stack, patterns, performance, compatibility constraints that apply.
 What this feature explicitly does NOT include.
 ```
 
+## Plan (per feature, stored in the branch doc)
+
+Same weight as the Goal Prompt — a short brief, not a blueprint. No file lists, no function-level edits.
+
+```markdown
+### Approach
+A few sentences: how it will work.
+### Boundaries
+What this feature must NOT touch.
+### Test plan
+Which tests prove which acceptance criteria.
+### Risks
+What could go wrong; what to watch for.
+```
+
 ## FEATURE INPUT block (orchestrator → feature-dev agent)
 
 The spawn prompt must be fully self-contained:
