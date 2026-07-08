@@ -59,7 +59,7 @@ Rewrite `.autopilot/state.json` at every phase transition (schema in `references
 
 ## Ultracode orchestration (`ultracode: true`)
 
-The user's explicit autopilot trigger combined with this setting is their standing opt-in to multi-agent Workflow orchestration for this run. When enabled AND the Workflow tool is available in the session, upgrade the phases per the "Ultracode orchestration" section of `references/loop-protocol.md` (fan-out gap analysis, multi-plan judging, adversarially verified review). When the Workflow tool is unavailable, fall back to the standard protocol and note that in the run log. `fastMode` overrides ultracode for the review phase (fast means fast). Expect significantly higher token cost — that is the point of the setting.
+The user's explicit autopilot trigger combined with this setting is their standing opt-in to multi-agent Workflow orchestration for this run. When enabled AND the Workflow tool is available in the session, upgrade the phases per the "Ultracode orchestration" section of `references/loop-protocol.md` (fan-out gap analysis, multi-plan judging, fan-out/fan-in development for large multi-file features, adversarially verified review). When the Workflow tool is unavailable, fall back to the standard protocol and note that in the run log. `fastMode` overrides ultracode for the review phase (fast means fast). Expect significantly higher token cost — that is the point of the setting.
 
 ## Unattended mode (`unattended: true`)
 

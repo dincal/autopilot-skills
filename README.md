@@ -72,7 +72,7 @@ Created by `/autopilot-init`; JSON Schema in [`templates/config.schema.json`](te
 | `mode` | `loop` | `loop` (repeat until stopped) or `single-feature` (one feature, no loop, no worktrees) |
 | `fastMode` | `false` | Minimize review: skip E2E, one review round, critical defects only |
 | `unattended` | `false` | The dev loop never asks you anything: gates behave as `auto`, decision points use documented safe defaults, stuck features get parked (PR left open with a comment) instead of force-merged. goal.md still requires your consent |
-| `ultracode` | `false` | Multi-agent Workflow orchestration inside the loop: fan-out gap analysis, multi-plan judging, adversarially verified review. Needs the Workflow tool (falls back gracefully); costs significantly more tokens |
+| `ultracode` | `false` | Multi-agent Workflow orchestration inside the loop: fan-out gap analysis, multi-plan judging, fan-out/fan-in development for large multi-file features (disjoint file ownership + integration stage), adversarially verified review. Needs the Workflow tool (falls back gracefully); costs significantly more tokens |
 | `parallelFeatures` | `2` | Features developed concurrently per iteration (1–4) |
 | `approvals.goalPrompt` / `.plan` / `.merge` | `ask` | `ask` pauses for your approval; `auto` proceeds (`.merge` covers feature PRs → run branch) |
 | `approvals.runMerge` | `ask` | Gate for the final run PR into your base branch. Unattended runs never merge it regardless — the PR waits for you |
