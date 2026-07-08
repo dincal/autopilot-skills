@@ -72,7 +72,7 @@ The user is not watching. NEVER call AskUserQuestion anywhere in the run:
 
 ## Stopping
 
-The loop cannot end silently: a plugin Stop hook blocks your turn from ending while `run.phase` is active and sends you back into the loop. Two legitimate exits:
+The loop cannot end silently: a plugin Stop hook blocks your turn from ending while `run.phase` is active and sends you back into the loop. Exception — **waiting on background agents is a legitimate turn end**: record the in-flight task ids in `features[].agentTask` (state.json) and the hook lets the turn end; the harness re-invokes you when a task completes (clear the field as you harvest). Beyond that, two legitimate exits:
 
 - **Full stop** (user request, config limit, failure, goal met): execute the Run end protocol, set `run.phase: "idle"`, report what was merged / in-flight / abandoned with PR links, and list any worktrees or branches intentionally left behind for resume.
 - **Pause** (user interrupted or switched topics mid-run): set `run.phase: "paused"`, report the pause in one line; the next autopilot invocation's preflight offers Resume / Clean up / Fresh start.

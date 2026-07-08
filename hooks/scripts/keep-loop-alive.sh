@@ -32,6 +32,11 @@ run = state.get("run") or {}
 phase = run.get("phase", "idle")
 if phase in ("idle", "paused"):
     sys.exit(0)
+# Waiting on background agents is a legitimate turn end: the harness
+# re-invokes the orchestrator when a tracked task completes.
+features = state.get("features") or []
+if any(f.get("agentTask") for f in features if isinstance(f, dict)):
+    sys.exit(0)
 print(f"{phase}:{run.get('iteration', 0)}")
 PY
 )"
@@ -61,6 +66,6 @@ printf '%s|%s' "$SNAPSHOT" "$COUNT" > "$GUARD"
 
 PHASE="${SNAPSHOT%%:*}"
 cat <<JSON
-{"decision":"block","reason":"An autopilot run is still ACTIVE (state.json run.phase: ${PHASE}). Do not end the turn silently. Read .autopilot/state.json and continue the loop from that phase per the autopilot-dev protocol (check background agent results if you were waiting on them). To stop legitimately: if a stop condition fired (user stop, maxIterations, stopOnFailure, goal met), execute the Run end protocol and set run.phase to \"idle\"; if the user interrupted or changed topic, set run.phase to \"paused\" and report the pause in one line before stopping."}
+{"decision":"block","reason":"An autopilot run is still ACTIVE (state.json run.phase: ${PHASE}) and no background work is recorded as in flight. Do not end the turn silently. Read .autopilot/state.json and continue the loop from that phase per the autopilot-dev protocol. If you ARE waiting on background agents, record their task ids in features[].agentTask in state.json — this hook then allows the turn to end (the harness re-invokes you on completion). To stop legitimately: if a stop condition fired (user stop, maxIterations, stopOnFailure, goal met), execute the Run end protocol and set run.phase to \"idle\"; if the user interrupted or changed topic, set run.phase to \"paused\" and report the pause in one line before stopping."}
 JSON
 exit 0

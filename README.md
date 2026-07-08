@@ -91,7 +91,7 @@ Created by `/autopilot-init`; JSON Schema in [`templates/config.schema.json`](te
 - **Every PR confesses first.** The PR body always leads with a highlighted "decisions made without user approval" section — design choices, auto-passed gates, plan deviations, review-arbitration overrides — followed by the work summary, so you can audit what was decided for you before merging.
 - **`todo.md` reflects only unbuilt work**, and your items always outrank the agent's.
 - **Your base branch is insulated.** Features merge into a per-run branch; only the final run PR touches base, and unattended runs never merge it — it stays open until you do.
-- **The loop can't die silently.** A `Stop` hook blocks the orchestrator from ending its turn while a run is active and bounces it back into the loop; stopping requires either finishing the run-end protocol or explicitly pausing. A progress-aware cap (3 nudges without progress) lets a genuinely stuck run stop, and the next invocation offers resume.
+- **The loop can't die silently.** A `Stop` hook blocks the orchestrator from ending its turn while a run is active and bounces it back into the loop; stopping requires finishing the run-end protocol or explicitly pausing. Waiting on background agents is exempt (recorded task ids in state.json let the turn end; the harness re-invokes on completion), and a progress-aware cap (3 nudges without progress) lets a genuinely stuck run stop for later resume.
 - **Nothing merges with failing tests**, and nothing ships without review unless you configured it that way.
 
 ## Repository layout

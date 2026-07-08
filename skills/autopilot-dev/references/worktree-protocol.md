@@ -30,7 +30,7 @@ Spawn one `autopilot:feature-dev` agent per feature with the Agent tool:
 - `run_in_background`: true
 - `prompt`: the FEATURE INPUT block defined in `schemas.md`, fully self-contained (the agent has no access to your conversation): feature id, worktree absolute path, branch name, Goal Prompt, Plan, test command, doc language, and the REVIEW FIXES block when re-spawning for fixes.
 
-Track returned task/agent ids in state.json (`features[].agentTask`). The harness notifies you as each background agent finishes — harvest results as they arrive (pipeline); never block waiting for all N.
+Track returned task/agent ids in state.json (`features[].agentTask`) BEFORE ending the turn — the keep-alive Stop hook allows a turn to end only when waiting is recorded there. The harness notifies you as each background agent finishes — harvest results as they arrive (pipeline; clear that feature's `agentTask` when you do); never block waiting for all N.
 
 ## Harvest
 

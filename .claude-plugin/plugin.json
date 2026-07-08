@@ -1,7 +1,7 @@
 {
   "name": "autopilot",
   "displayName": "Autopilot",
-  "version": "0.18.0",
+  "version": "0.18.1",
   "description": "Goal-driven autonomous development: parallel feature loops in git worktrees with per-feature PRs, evidence-based code review, and E2E verification agents.",
   "author": {
     "name": "Eddie",

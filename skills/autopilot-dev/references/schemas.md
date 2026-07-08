@@ -25,7 +25,7 @@ Rewritten atomically (full file) at every phase transition.
       "todos": ["AP-012"],
       "branch": "autopilot/ap-012-price-filter",
       "worktree": "/abs/path/<repoName>__autopilot/ap-012-price-filter",
-      "agentTask": "<background task id or null>",
+      "agentTask": "<task id(s) of background work currently in flight for this feature — dev agent or reviewers; null when none>",
       "status": "developing",
       "pr": null,
       "reviewRounds": 0
@@ -36,6 +36,7 @@ Rewritten atomically (full file) at every phase transition.
 ```
 
 - `run.phase`: `idle | paused | selecting | planning | developing | reviewing | merging | docs` — `idle`: no run / run finished; `paused`: run suspended mid-flight (resumable). A plugin Stop hook blocks the orchestrator from ending its turn while the phase is anything else, so phase transitions are what legitimately stop the loop.
+- `features[].agentTask` discipline: SET it when spawning background work for the feature (feature-dev agent, reviewers) and CLEAR it (null) as soon as the results are harvested. While any feature has a non-null `agentTask`, the Stop hook permits ending the turn — that is the legitimate "waiting for background agents" state, and the harness re-invokes on task completion.
 - `features[].status`: `planned | developing | dev-done | in-review | changes-requested | approved | merged | failed | abandoned`
 
 ## todo.md item
