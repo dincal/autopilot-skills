@@ -29,7 +29,7 @@ Present the audit first, then interview in 2–3 AskUserQuestion rounds. YOU fra
 - **Round 2 — visual foundations**: color palette (offer concrete candidates with hex values, semantic roles, dark mode policy), typography (families, scale), spacing/density.
 - **Round 3 — structure**: layout & navigation patterns, component conventions (radius, elevation, states), voice & copy tone. Plus: per-area direction for upcoming todo features that need design.
 
-**Design tool integration**: if a design tool is available in this session (e.g. Claude Design / DesignSync, or artifact-based mockups), offer to produce visual candidates there and iterate with the user on real mockups instead of descriptions. The user may also paste links or supply their own mockups — treat those as the strongest signal. If no tooling is available, keep candidates concrete anyway: hex palettes, type scales, named reference apps.
+**Design tool integration**: if a design tool is available in this session — the built-in DesignSync tool (Claude Design handoff; Claude Design itself is a claude.ai/design web feature, NOT a registrable MCP), a design-tool MCP such as Figma or Adobe, or artifact-based mockups — offer to produce visual candidates there and iterate with the user on real mockups instead of descriptions. The user may also paste links or supply their own mockups — treat those as the strongest signal. If no tooling is available, keep candidates concrete anyway: hex palettes, type scales, named reference apps.
 
 ## Step 4 — Write the outcome
 
