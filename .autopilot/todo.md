@@ -27,5 +27,10 @@ Rules:
 
 ## Items
 
-<!-- No items yet. Add items with /autopilot-todo, or let /autopilot-sync
-     and the autopilot dev loop populate them. -->
+- [ ] AP-001 | P1 | user | in-progress
+  - story: 오토파일럿 사용자로서, 여러 파일에 걸친 큰 피처를 울트라코드 모드에서 fan-out/fan-in 워크플로우로 병렬 구현해, 계약(WORK SUMMARY·테스트·커버리지)을 유지한 채 더 빠르게 개발되기를 원한다.
+  - acceptance:
+    - loop-protocol.md 울트라코드 섹션에 Phase C 개발 가이드가 추가된다 (파일 소유권 분할 fan-out, 통합 fan-in 스테이지, 사용 조건 임계값, 실패 처리, WORK SUMMARY 계약 유지)
+    - autopilot-dev SKILL.md의 울트라코드 요약과 영·한 README의 ultracode 설명에 개발 fan-out이 반영된다
+    - 정적 검증(frontmatter/JSON/bash)이 통과하고 plugin.json 버전이 minor bump된다
+  - notes: 사용자 요청 2026-07-08 (오토파일럿 단일 피처 모드)
