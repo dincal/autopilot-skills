@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "language": "ko",
+  "mode": "single-feature",
+  "fastMode": false,
+  "unattended": false,
+  "ultracode": false,
+  "parallelFeatures": 1,
+  "approvals": {
+    "goalPrompt": "ask",
+    "plan": "ask",
+    "newTodos": "auto",
+    "merge": "ask",
+    "runMerge": "ask"
+  },
+  "review": {
+    "codeReview": true,
+    "e2eTest": true,
+    "reviewerModel": null,
+    "maxReviewIterations": 3
+  },
+  "testing": {
+    "requireTests": true,
+    "testCommand": null,
+    "coverage": {
+      "target": 80,
+      "command": null
+    },
+    "e2e": {
+      "runCommand": null,
+      "readyCheck": null,
+      "url": null
+    }
+  },
+  "devRun": {
+    "autoStart": true
+  },
+  "git": {
+    "baseBranch": "main",
+    "branchPrefix": "autopilot/",
+    "mergeMethod": "rebase",
+    "deleteBranchAfterMerge": true,
+    "worktreeRoot": null
+  },
+  "loop": {
+    "maxIterations": 0,
+    "stopOnFailure": true
+  }
+}

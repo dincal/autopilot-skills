@@ -1,0 +1,100 @@
+# Changelog
+
+<!-- Format follows Keep a Changelog (https://keepachangelog.com/).
+     Versions are cut from git tags by /autopilot-sync.
+     The autopilot dev loop appends merged features to [Unreleased].
+     Entry format: - <description> (<feature IDs>, PR #<n>) -->
+
+## [Unreleased]
+
+## [0.19.1] - 2026-07-08
+- 저장소 셀프 관리 초기화: `.autopilot/`(goal·config·design·tech-design·todo·CHANGELOG·branch), CLAUDE.md, .gitignore
+- 규칙 추가: main에 피처가 들어갈 때마다 plugin.json 버전 업 + 태그 필수 (CLAUDE.md Conventions)
+
+## [0.19.0] - 2026-07-08
+- 오토파일럿 런 시작 시 dev 서버 자동 기동 (`devRun.autoStart`)
+
+## [0.18.1] - 2026-07-08
+- keep-alive Stop 훅이 백그라운드 에이전트 대기(`features[].agentTask`) 중 턴 종료를 허용
+
+## [0.18.0] - 2026-07-08
+- 리모트 브랜치 위생: init이 GitHub `delete_branch_on_merge` 설정 활성화, 런 PR `--delete-branch`, 폐기 브랜치 원격 삭제, sync에 원격 정리 단계
+
+## [0.17.2] - 2026-07-08
+- `parallelFeatures`는 상한이지 쿼터가 아님을 명문화
+
+## [0.17.1] - 2026-07-08
+- 기본 `git.mergeMethod`를 rebase로 변경
+
+## [0.17.0] - 2026-07-08
+- Claude Design 전용 목업 승인 플로우 (`/autopilot-design` 핑퐁, 루프 내 디자인 개입, 무인모드 Claude Design 동기화)
+- `/autopilot-stop` 커맨드: 런 정리 + 런 PR 사용자 승인 머지
+
+## [0.16.2] - 2026-07-08
+- Claude Design MCP 등록 방법 정정 (공식 엔드포인트 + /design-login)
+
+## [0.16.1] - 2026-07-08
+- 디자인 도구 안내 문구 수정
+
+## [0.16.0] - 2026-07-08
+- `/autopilot-design` 커맨드 + design.md 살아있는 Style Guide 섹션 (루프가 UI 기능 Goal Prompt에 규칙 복사)
+
+## [0.15.0] - 2026-07-08
+- `/autopilot-dev-run` 커맨드: 관리형 dev 서버 + 머지/pull 트리거 자동 재시작 훅
+
+## [0.14.2] - 2026-07-08
+- 리뷰 정책을 중립·증거 기반으로 재정의 (입증 책임은 차단자에게, 거부를 위한 리뷰 금지)
+
+## [0.14.1] - 2026-07-08
+- 한국어 사용설명서(README.ko.md) 추가
+
+## [0.14.0] - 2026-07-08
+- keep-alive Stop 훅: 런 활성 중 조용한 턴 종료 차단 + `paused` 상태 + 안전밸브
+
+## [0.13.0] - 2026-07-07
+- `ultracode` 설정: 루프 내 Workflow 멀티에이전트 오케스트레이션 (갭 분석 팬아웃, 플랜 저지, 반박 검증 리뷰)
+
+## [0.12.0] - 2026-07-07
+- 리뷰를 PR 코멘트로 게시 (자기 PR review 불가 버그 수정) + `review.reviewerModel` 오버라이드
+
+## [0.11.0] - 2026-07-07
+- design.md(UI/UX)와 tech-design.md(기술) 분리, sync가 잘못 들어간 항목 1회 이동
+
+## [0.10.1] - 2026-07-07
+- 루프 계속이 기본값임을 강제 (1 이터레이션 조기 종료 수정)
+
+## [0.10.0] - 2026-07-07
+- 런 브랜치 구조: 기능 PR은 런 브랜치로, base는 `approvals.runMerge` 게이트를 거친 런 PR로만 접촉 (무인모드는 base 머지 금지)
+
+## [0.9.0] - 2026-07-07
+- 테스트 커버리지 강제: `testing.coverage`(기본 80%), WORK SUMMARY coverage 필드, 리뷰 기준 반영
+
+## [0.8.0] - 2026-07-07
+- `/autopilot-init` 프로젝트 개요 인자 (인자 > 조사 도출 > 질문 우선순위)
+
+## [0.7.1] - 2026-07-07
+- `/autopilot-project-review` focus 인자 제거
+
+## [0.7.0] - 2026-07-07
+- `/autopilot-project-review` 커맨드: 냉정한 시장 반응 평가 + goal/todo 인터뷰 반영
+
+## [0.6.0] - 2026-07-07
+- 모든 PR 본문 최상단에 ⚠️ "사용자 동의 없이 임의로 결정한 사항" 섹션 강제
+
+## [0.5.0] - 2026-07-07
+- 무인모드(`unattended`): 질문 없이 안전 기본값으로 진행, 막힌 기능은 파킹
+
+## [0.4.0] - 2026-07-07
+- `/autopilot-config` 커맨드: 스키마 검증 기반 설정 인터뷰
+
+## [0.3.1] - 2026-07-07
+- 플러그인 매니페스트 훅 중복 참조 수정 (설치 실패 버그)
+
+## [0.3.0] - 2026-07-07
+- `/autopilot-todo` 커맨드: 인터뷰로 user 소스 todo 추가
+
+## [0.2.0] - 2026-07-07
+- `/autopilot-init` GitHub 저장소 인자 (기존 연결 / gh 생성)
+
+## [0.1.0] - 2026-07-07
+- 최초 릴리스: /autopilot-goal·init·sync, autopilot-dev 루프 스킬, 에이전트 3종(feature-dev·code-reviewer·e2e-tester), goal.md 보호 훅, 템플릿·마켓플레이스

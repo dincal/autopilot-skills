@@ -1,0 +1,5 @@
+.autopilot/state.json
+.autopilot/logs/
+.autopilot/.goal-consent
+.autopilot/.stop-guard
+.autopilot/dev-run.json
