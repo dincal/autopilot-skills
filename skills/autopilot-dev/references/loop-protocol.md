@@ -22,8 +22,8 @@ Loop mode only — single-feature mode works directly against `git.baseBranch` w
    - Gate: if `approvals.newTodos` is `ask`, present the drafted items (AskUserQuestion, multiSelect) and add only accepted ones; `auto` → add them all. Update todo.md.
 3. **Pick N features** (N = `parallelFeatures`; in `single-feature` mode N = 1 and, if the user named the feature, use that):
    - Order strictly: `source: user` first (all user items before any agent item) → priority (P0 highest) → lowest ID. Respect `depends-on`: an item whose dependency is unmerged is not eligible.
-   - Composition rule: one feature = one full dev cycle, minimum one user story. MERGE tightly-coupled or too-small todos into a single feature; SPLIT anything too big to land as one reviewable PR. Fewer eligible todos than N → shrink N, never pad with filler.
-   - Choose features that can land independently — avoid picking two features that will edit the same files heavily (merge them into one feature instead).
+   - Composition rule: one feature = one full dev cycle, minimum one user story. MERGE tightly-coupled or too-small todos into a single feature; SPLIT anything too big to land as one reviewable PR.
+   - **N is a CEILING, not a quota**: pick fewer than N whenever fewer independent, well-sized features exist — because eligible todos ran short, dependencies block items, or parallel agents would collide on the same files (merge those into one feature instead). Never pad with filler features to reach N; running 2 good features under a parallelFeatures of 4 is correct behavior.
 4. For each feature: assign a feature id (`F-<date>-<letter>`), branch name `<git.branchPrefix><ap-ids>-<slug>` (English, kebab-case), mark its todos `selected`, and register it in state.json.
 
 ## Phase B — Plan (`phase: planning`)
