@@ -4,7 +4,7 @@
 - base: main
 - features: AP-001
 - pr: #1
-- status: in-review   <!-- in-progress | in-review | merged | abandoned -->
+- status: merged   <!-- in-progress | in-review | merged | abandoned -->
 
 ## Goal Prompt
 
